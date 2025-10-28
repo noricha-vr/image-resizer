@@ -1,0 +1,7 @@
+# リサイズくん robots.txt
+
+User-agent: *
+Allow: /
+
+# サイトマップ
+Sitemap: https://image-resizer.example.com/sitemap.xml

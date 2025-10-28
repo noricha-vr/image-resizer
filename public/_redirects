@@ -1,0 +1,3 @@
+# Cloudflare Pages SPA routing support
+# すべての未定義ルートをindex.htmlにリダイレクト
+/*    /index.html   200
