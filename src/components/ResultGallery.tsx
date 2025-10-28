@@ -59,7 +59,7 @@ export function ResultGallery({
                 <span>
                   {image.width} × {image.height}
                 </span>
-                <span className="px-2 py-0.5 bg-golden-light text-golden-dark rounded font-medium">
+                <span className="px-2 py-0.5 bg-golden text-white rounded font-medium">
                   {image.outputFormat}
                 </span>
               </div>
