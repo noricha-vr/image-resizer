@@ -1,6 +1,6 @@
 import type { ImageFile, ProcessedImage } from '../types';
 import { ProcessingStatus as Status } from '../types';
-import { downloadProcessedImage } from '../utils/downloadHelper';
+import { downloadProcessedImage, downloadAll } from '../utils/downloadHelper';
 
 interface ProcessingStatusProps {
   queue: ImageFile[];
@@ -70,11 +70,25 @@ export function ProcessingStatus({
   // キューと結果を結合してマップを作成
   const resultMap = new Map(results.map((r) => [r.id, r]));
 
+  const handleDownloadAll = () => {
+    downloadAll(results, maxSize);
+  };
+
   return (
     <div className="bg-cream/30 rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">
-        処理状況 ({queue.length + results.length}件)
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-800">
+          処理状況 ({queue.length + results.length}件)
+        </h3>
+        {results.length > 1 && (
+          <button
+            onClick={handleDownloadAll}
+            className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
+          >
+            すべてダウンロード
+          </button>
+        )}
+      </div>
 
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {/* 待機中・処理中のアイテム */}
