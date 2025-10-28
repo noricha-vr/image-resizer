@@ -169,14 +169,14 @@ export function ProcessingStatus({
                   </div>
 
                   {/* 情報 */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    {/* ファイル名 */}
                     <p className="text-sm font-medium text-gray-900 truncate">
                       {result.originalFile.name}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                      <span>
-                        {result.width} × {result.height}
-                      </span>
+
+                    {/* 設定 */}
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
                       <span className="px-2 py-0.5 bg-golden text-white rounded font-medium">
                         {result.outputFormat}
                       </span>
@@ -185,9 +185,13 @@ export function ProcessingStatus({
                         <span>品質{result.quality}%</span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {(result.resizedBlob.size / 1024).toFixed(1)} KB
-                    </p>
+
+                    {/* 出力後の情報 */}
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span>{result.width} × {result.height}</span>
+                      <span>•</span>
+                      <span>{(result.resizedBlob.size / 1024).toFixed(1)} KB</span>
+                    </div>
                   </div>
 
                   {/* アクションボタン */}
