@@ -176,13 +176,11 @@ export function ProcessingStatus({
                     </p>
 
                     {/* 設定 */}
-                    <div className="flex items-center justify-between text-xs text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <span>最大{result.maxSize}px</span>
-                        {result.outputFormat !== 'PNG' && (
-                          <span>品質{result.quality}%</span>
-                        )}
-                      </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <span>最大{result.maxSize}px</span>
+                      {result.outputFormat !== 'PNG' && (
+                        <span>品質{result.quality}%</span>
+                      )}
                       <span className="px-2 py-0.5 bg-golden text-white rounded font-medium">
                         {result.outputFormat}
                       </span>
