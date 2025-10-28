@@ -92,7 +92,7 @@ export function ProcessingStatus({
               onClick={onReset}
               className="px-4 py-2 bg-red text-white rounded-md hover:bg-red-dark transition-colors text-sm font-medium"
             >
-              すべてリセット
+              リセット
             </button>
           )}
           {results.length > 1 && (
