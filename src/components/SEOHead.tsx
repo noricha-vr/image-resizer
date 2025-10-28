@@ -16,15 +16,15 @@ interface SEOHeadProps {
  * 検索エンジン最適化に必要な情報を適切に設定します。
  */
 export function SEOHead({
-  title = '画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】AVIF/PNG/JPEG対応',
-  description = 'ブラウザ完結で安心！プライバシー保護の無料画像リサイズ・圧縮ツール。JPEG/PNG/AVIF対応、品質調整可能。Instagram・SNS最適サイズに一発変換。サーバーアップロード不要でオフライン動作。',
-  keywords = '画像リサイズ,画像圧縮,無料,JPEG,PNG,AVIF,サーバーアップロードなし,ブラウザ完結,プライバシー保護,オフライン,ローカル処理,品質調整,Instagram,SNS,画像最適化,透過PNG,次世代画像形式',
+  title = 'リサイズくん - 画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】',
+  description = 'ブラウザ完結で安心！リサイズくんは、プライバシー保護の無料画像リサイズ・圧縮ツール。JPEG/PNG/AVIF対応、品質調整可能。Instagram・SNS最適サイズに一発変換。サーバーアップロード不要でオフライン動作。',
+  keywords = 'リサイズくん,画像リサイズ,画像圧縮,無料,JPEG,PNG,AVIF,サーバーアップロードなし,ブラウザ完結,プライバシー保護,オフライン,ローカル処理,品質調整,Instagram,SNS,画像最適化,透過PNG,次世代画像形式',
   ogImage = '/og-image.png',
   ogType = 'website',
   twitterCard = 'summary_large_image',
 }: SEOHeadProps) {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://image-resizer.example.com';
-  const fullTitle = title.includes('Image Resizer') ? title : `${title} | Image Resizer`;
+  const fullTitle = title.includes('リサイズくん') ? title : `${title} | リサイズくん`;
 
   return (
     <Helmet>
@@ -54,7 +54,7 @@ export function SEOHead({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:locale" content="ja_JP" />
-      <meta property="og:site_name" content="Image Resizer" />
+      <meta property="og:site_name" content="リサイズくん" />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content={twitterCard} />
@@ -66,7 +66,7 @@ export function SEOHead({
       <meta name="theme-color" content="#2563eb" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content="Image Resizer" />
+      <meta name="apple-mobile-web-app-title" content="リサイズくん" />
 
       {/* セキュリティ */}
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -79,8 +79,8 @@ export function SEOHead({
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: '画像リサイズ・圧縮ツール',
-          alternateName: 'Image Resizer',
+          name: 'リサイズくん',
+          alternateName: '画像リサイズ・圧縮ツール',
           description: description,
           url: siteUrl,
           applicationCategory: 'UtilityApplication',
