@@ -46,14 +46,7 @@ function App() {
         <header className="bg-golden shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img
-                src="/logo.png"
-                alt="リサイズくん ロゴ"
-                className="w-10 h-10"
-              />
-              <h1 className="text-2xl font-bold text-white">リサイズくん</h1>
-            </div>
+            <h1 className="text-2xl font-bold text-white">リサイズくん</h1>
             <p className="text-sm text-white/90">
               ブラウザ完結・プライバシー保護 | JPEG / PNG / AVIF
             </p>
