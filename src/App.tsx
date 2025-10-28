@@ -46,9 +46,16 @@ function App() {
         <header className="bg-golden shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">Image Resizer</h1>
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="リサイズくん ロゴ"
+                className="w-10 h-10"
+              />
+              <h1 className="text-2xl font-bold text-white">リサイズくん</h1>
+            </div>
             <p className="text-sm text-white/90">
-              画像を簡単にリサイズ | JPEG / PNG / AVIF
+              ブラウザ完結・プライバシー保護 | JPEG / PNG / AVIF
             </p>
           </div>
         </div>
@@ -83,8 +90,8 @@ function App() {
       <footer className="bg-golden border-t border-orange">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between text-sm text-white/90">
-            <p>&copy; 2025 Image Resizer. All rights reserved.</p>
-            <p>Chrome推奨 | ブラウザ完結処理</p>
+            <p>&copy; 2025 リサイズくん. All rights reserved.</p>
+            <p>Chrome推奨 | サーバーアップロード不要</p>
           </div>
         </div>
       </footer>
