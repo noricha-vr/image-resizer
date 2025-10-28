@@ -95,7 +95,7 @@ export function ProcessingStatus({
               リセット
             </button>
           )}
-          {results.length > 1 && (
+          {results.length > 0 && (
             <button
               onClick={handleDownloadAll}
               className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
