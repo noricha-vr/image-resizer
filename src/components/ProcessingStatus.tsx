@@ -180,6 +180,10 @@ export function ProcessingStatus({
                       <span className="px-2 py-0.5 bg-golden text-white rounded font-medium">
                         {result.outputFormat}
                       </span>
+                      <span>最大{result.maxSize}px</span>
+                      {result.outputFormat !== 'PNG' && (
+                        <span>品質{result.quality}%</span>
+                      )}
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
                       {(result.resizedBlob.size / 1024).toFixed(1)} KB

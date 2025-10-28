@@ -71,6 +71,8 @@ export function useImageProcessor(settings: ResizeSettings) {
           downloadUrl: createDownloadUrl(resizedBlob),
           thumbnailUrl: createDownloadUrl(thumbnailBlob),
           outputFormat: settings.outputFormat,
+          maxSize: settings.maxSize,
+          quality: settings.quality,
         };
 
         // ステータスを完了に更新
