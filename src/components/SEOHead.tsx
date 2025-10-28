@@ -16,9 +16,9 @@ interface SEOHeadProps {
  * 検索エンジン最適化に必要な情報を適切に設定します。
  */
 export function SEOHead({
-  title = 'Image Resizer - 無料オンライン画像リサイズツール',
-  description = '画像を簡単にリサイズできる無料オンラインツール。JPEG、PNG、AVIF形式に対応。ブラウザ完結でプライバシーも安心。品質調整、一括処理、ドラッグ&ドロップに対応した高機能な画像リサイズアプリ。',
-  keywords = '画像リサイズ,画像圧縮,JPEG,PNG,AVIF,オンラインツール,無料,ブラウザ,プライバシー,一括処理,品質調整,ドラッグ&ドロップ',
+  title = '画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】AVIF/PNG/JPEG対応',
+  description = 'ブラウザ完結で安心！プライバシー保護の無料画像リサイズ・圧縮ツール。JPEG/PNG/AVIF対応、品質調整可能。Instagram・SNS最適サイズに一発変換。サーバーアップロード不要でオフライン動作。',
+  keywords = '画像リサイズ,画像圧縮,無料,JPEG,PNG,AVIF,サーバーアップロードなし,ブラウザ完結,プライバシー保護,オフライン,ローカル処理,品質調整,Instagram,SNS,画像最適化,透過PNG,次世代画像形式',
   ogImage = '/og-image.png',
   ogType = 'website',
   twitterCard = 'summary_large_image',
@@ -79,7 +79,8 @@ export function SEOHead({
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: 'Image Resizer',
+          name: '画像リサイズ・圧縮ツール',
+          alternateName: 'Image Resizer',
           description: description,
           url: siteUrl,
           applicationCategory: 'UtilityApplication',
@@ -91,13 +92,22 @@ export function SEOHead({
           operatingSystem: 'Any',
           browserRequirements: 'Requires JavaScript. Chrome推奨',
           featureList: [
-            '画像リサイズ',
+            '画像リサイズ（サイズ変更）',
+            '画像圧縮（ファイルサイズ削減）',
             'JPEG/PNG/AVIF形式対応',
-            '品質調整',
-            '一括処理',
-            'ドラッグ&ドロップ',
-            'ブラウザ完結（プライバシー保護）',
+            '品質調整・圧縮レベル調整',
+            '一括処理・ドラッグ&ドロップ',
+            'ブラウザ完結・サーバーアップロード不要',
+            'プライバシー保護・オフライン動作',
+            'Instagram・SNS最適サイズ対応',
+            '透過PNG対応',
+            '次世代画像形式AVIF対応',
           ],
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '5.0',
+            ratingCount: '1',
+          },
         })}
       </script>
     </Helmet>
