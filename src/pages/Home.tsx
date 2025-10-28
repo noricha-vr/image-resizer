@@ -46,6 +46,16 @@ export function Home() {
     <>
       <SEOHead />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {/* ページタイトルと説明 */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            画像リサイズ・圧縮ツール - ブラウザ完結で安心・無料
+          </h1>
+          <p className="text-gray-600 text-lg">
+            サーバーアップロード不要。JPEG/PNG/AVIF形式に対応し、Instagram・SNS最適サイズに一発変換。プライバシー保護で安心してご利用いただけます。
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左カラム: アップロードエリアと処理状況 */}
           <div className="lg:col-span-2 space-y-6">

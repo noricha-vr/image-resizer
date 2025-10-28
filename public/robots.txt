@@ -4,4 +4,4 @@ User-agent: *
 Allow: /
 
 # サイトマップ
-Sitemap: https://image-resizer.example.com/sitemap.xml
+Sitemap: https://resize.kojin.works/sitemap.xml

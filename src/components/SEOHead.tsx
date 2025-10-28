@@ -7,6 +7,7 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: string;
   twitterCard?: 'summary' | 'summary_large_image';
+  canonicalUrl?: string;
 }
 
 /**
@@ -22,8 +23,11 @@ export function SEOHead({
   ogImage = '/og/image.png',
   ogType = 'website',
   twitterCard = 'summary_large_image',
+  canonicalUrl,
 }: SEOHeadProps) {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://resize.kojin.works';
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const fullCanonicalUrl = canonicalUrl || `${siteUrl}${currentPath}`;
   const fullTitle = title.includes('リサイズくん') ? title : `${title} | リサイズくん`;
 
   return (
@@ -49,7 +53,7 @@ export function SEOHead({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={siteUrl} />
+      <meta property="og:url" content={fullCanonicalUrl} />
       <meta property="og:image" content={`${siteUrl}${ogImage}`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
@@ -72,7 +76,7 @@ export function SEOHead({
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
       {/* 正規URL */}
-      <link rel="canonical" href={siteUrl} />
+      <link rel="canonical" href={fullCanonicalUrl} />
 
       {/* 構造化データ (JSON-LD) */}
       <script type="application/ld+json">
@@ -103,11 +107,19 @@ export function SEOHead({
             '透過PNG対応',
             '次世代画像形式AVIF対応',
           ],
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '5.0',
-            ratingCount: '1',
+          author: {
+            '@type': 'Person',
+            name: 'noricha-vr',
+            url: 'https://github.com/noricha-vr',
           },
+          publisher: {
+            '@type': 'Organization',
+            name: 'kojin.works',
+            url: 'https://kojin.works',
+          },
+          datePublished: '2025-10-29',
+          dateModified: '2025-10-29',
+          softwareVersion: '1.0.0',
         })}
       </script>
     </Helmet>
