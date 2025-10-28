@@ -34,17 +34,21 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
       {/* 最大サイズ設定 */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
-          最大サイズ (px)
+          最大サイズ: {settings.maxSize}px
         </label>
         <input
-          type="number"
+          type="range"
           value={settings.maxSize}
           onChange={(e) => handleMaxSizeChange(e.target.value)}
-          min="100"
-          max="5000"
+          min="10"
+          max="1980"
           step="10"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full"
         />
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>10px</span>
+          <span>1980px</span>
+        </div>
         <p className="text-xs text-gray-500">
           画像の長辺がこのサイズにリサイズされます
         </p>

@@ -1,73 +1,206 @@
-# React + TypeScript + Vite
+# Image Resizer - 無料オンライン画像リサイズツール
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-19.2-blue.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646CFF.svg)](https://vitejs.dev/)
 
-Currently, two official plugins are available:
+画像を簡単にリサイズできる無料オンラインツール。JPEG、PNG、AVIF形式に対応。ブラウザ完結でプライバシーも安心。品質調整、一括処理、ドラッグ&ドロップに対応した高機能な画像リサイズアプリ。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 主な機能
 
-## React Compiler
+### 画像処理
+- **3つの出力形式に対応**: JPEG / PNG / AVIF
+- **柔軟なリサイズ**: 10px〜1980pxまでスライダーで調整可能
+- **品質設定**: 50%〜100%まで5%刻みで調整（PNG除く）
+- **一括処理**: 複数の画像を同時に処理可能
+- **Canvas API**: ブラウザ完結でサーバーにアップロード不要
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### ユーザー体験
+- **ドラッグ&ドロップ**: 直感的なファイルアップロード
+- **リアルタイムプレビュー**: 処理結果を即座に確認
+- **設定の永続化**: localStorage により設定を記憶
+- **レスポンシブデザイン**: デスクトップ・モバイル両対応
+- **SEO最適化**: Open Graph、Twitter Card、構造化データ対応
 
-## Expanding the ESLint configuration
+### プライバシー・セキュリティ
+- **完全ブラウザ処理**: サーバーにデータを送信しない
+- **オフライン対応**: インターネット接続不要で動作
+- **データ保護**: 画像データはローカルのみで処理
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 技術スタック
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **フロントエンド**: React 19.2 + TypeScript 5.9
+- **ビルドツール**: Vite 7.1
+- **パッケージマネージャー**: Bun
+- **スタイリング**: TailwindCSS v4
+- **画像処理**: Canvas API
+- **ファイル処理**: react-dropzone
+- **SEO**: react-helmet-async
+- **テスト**: Vitest + React Testing Library
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## インストール
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# リポジトリをクローン
+git clone https://github.com/your-username/image-resizer.git
+cd image-resizer
+
+# 依存関係をインストール
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 開発
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 開発サーバーを起動（デフォルトポート: 5173）
+bun run dev
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# カスタムポートで起動
+bun run dev -- --port 5175
+
+# ビルド
+bun run build
+
+# プレビュー
+bun run preview
+
+# テスト実行
+bun test
+
+# テスト（watch モード）
+bun test:watch
+
+# TypeScript型チェック
+bun run type-check
 ```
+
+## プロジェクト構造
+
+```
+image-resizer/
+├── src/
+│   ├── components/          # UIコンポーネント
+│   │   ├── DropZone.tsx     # ドラッグ&ドロップエリア
+│   │   ├── SettingsPanel.tsx # 設定パネル
+│   │   ├── ProcessingQueue.tsx # 処理キュー表示
+│   │   ├── ResultGallery.tsx # 結果ギャラリー
+│   │   └── SEOHead.tsx      # SEOメタタグ管理
+│   ├── hooks/               # カスタムフック
+│   │   ├── useImageProcessor.ts # 画像処理ロジック
+│   │   └── useLocalStorage.ts   # 設定永続化
+│   ├── utils/               # ユーティリティ関数
+│   │   ├── imageResizer.ts  # リサイズ処理
+│   │   ├── fileValidator.ts # ファイル検証
+│   │   ├── downloadHelper.ts # ダウンロード処理
+│   │   └── storageHelper.ts  # localStorage管理
+│   ├── types/               # TypeScript型定義
+│   │   └── index.ts
+│   ├── App.tsx              # メインアプリケーション
+│   └── main.tsx             # エントリーポイント
+├── docs/                    # ドキュメント
+│   └── image-resizer-design.md
+├── tests/                   # テストファイル
+├── public/                  # 静的ファイル
+└── dist/                    # ビルド出力
+```
+
+## 使い方
+
+### 基本的な使い方
+
+1. **ファイル選択**: ドラッグ&ドロップまたはクリックで画像ファイルを選択
+2. **設定調整**: 右側のパネルでサイズ・品質・形式を設定
+3. **自動処理**: ファイル追加後、自動的にリサイズが開始
+4. **ダウンロード**: 処理完了後、各画像のダウンロードボタンをクリック
+
+### 出力形式の選択
+
+- **JPEG**: 高圧縮率、写真に最適、品質調整可能
+- **PNG**: 可逆圧縮、透過画像対応、品質調整不可
+- **AVIF**: 最新形式、高圧縮率・高品質、品質調整可能
+
+### ファイル名規則
+
+リサイズされた画像のファイル名は以下の形式になります：
+
+```
+元のファイル名_[サイズ]px.拡張子
+例: photo_720px.jpg
+```
+
+## 設定
+
+### デフォルト設定
+
+- 最大サイズ: 720px
+- 品質: 80%
+- 出力形式: JPEG
+
+### 設定の永続化
+
+設定はlocalStorageに自動保存され、次回アクセス時に復元されます。
+
+### 環境変数
+
+`.env`ファイルで以下の設定が可能です：
+
+```env
+VITE_SITE_URL=https://your-domain.com  # サイトURL（SEO用）
+```
+
+## SEO設定
+
+アプリケーションは以下のSEO機能を実装しています：
+
+- **メタタグ**: title, description, keywords
+- **Open Graph**: Facebook、LinkedIn等のSNS対応
+- **Twitter Card**: Twitterプレビュー対応
+- **構造化データ**: JSON-LD形式のSchema.org準拠データ
+- **PWA対応**: モバイルアプリライクな体験
+
+## ブラウザ対応
+
+- Chrome（推奨）
+- Firefox
+- Safari
+- Edge
+
+※ AVIF形式の出力にはブラウザのサポートが必要です
+
+## パフォーマンス
+
+- **バンドルサイズ**: 約90KB（gzip圧縮後）
+- **処理速度**: クライアントサイドで高速処理
+- **メモリ効率**: Canvas APIによる効率的なメモリ管理
+
+## コントリビューション
+
+プルリクエストを歓迎します。大きな変更の場合は、まずissueを開いて変更内容を議論してください。
+
+1. このリポジトリをフォーク
+2. 機能ブランチを作成（`git checkout -b feature/amazing-feature`）
+3. 変更をコミット（`git commit -m 'feat: Add amazing feature'`）
+4. ブランチにプッシュ（`git push origin feature/amazing-feature`）
+5. プルリクエストを作成
+
+## ライセンス
+
+MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照してください。
+
+## 作者
+
+noricha-vr
+
+## リンク
+
+- [ドキュメント](./docs/image-resizer-design.md)
+- [プロジェクト設定](./CLAUDE.md)
+- [課題トラッカー](https://github.com/noricha-vr/image-resizer/issues)
+
+## 謝辞
+
+- React チーム
+- Vite チーム
+- TailwindCSS チーム
+- すべてのコントリビューター
