@@ -174,7 +174,7 @@ export function ProcessingStatus({
               >
                 <div className="flex items-start gap-3">
                   {/* サムネイル */}
-                  <div className="w-20 h-20 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                  <div className="w-25 h-25 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
                     <img
                       src={result.thumbnailUrl}
                       alt={result.originalFile.name}
@@ -184,20 +184,27 @@ export function ProcessingStatus({
 
                   {/* 情報 */}
                   <div className="flex-1 min-w-0">
+                    {/* 形式バッジ */}
+                    <div className="mb-1">
+                      <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-sm inline-block">
+                        {result.outputFormat}
+                      </span>
+                    </div>
+
                     {/* ファイル名 */}
-                    <p className="text-base font-medium text-gray-900 truncate">
+                    <p className="text-base font-medium text-gray-900 truncate mb-1">
                       {result.originalFile.name}
                     </p>
 
-                    {/* 設定 */}
+                    {/* 設定情報 */}
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <span>最大{result.maxSize}px</span>
                       {result.outputFormat !== 'PNG' && (
-                        <span>品質{result.quality}%</span>
+                        <>
+                          <span>•</span>
+                          <span>品質{result.quality}%</span>
+                        </>
                       )}
-                      <span className="px-2 py-0.5 bg-golden text-white rounded font-medium">
-                        {result.outputFormat}
-                      </span>
                     </div>
 
                     {/* 出力後の情報 */}

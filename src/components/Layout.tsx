@@ -14,9 +14,6 @@ export function Layout() {
             <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
               <h1 className="text-2xl font-bold text-white">リサイズくん</h1>
             </Link>
-            <p className="text-sm text-white/90 hidden sm:block">
-              ブラウザ完結・プライバシー保護 | JPEG / PNG / AVIF
-            </p>
           </div>
         </div>
       </header>

@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 画像をJPEG/PNG/AVIF形式にリサイズするシングルページアプリケーション。任意の画像形式を選択した形式に変換し、指定サイズにリサイズしてダウンロード可能にする。ブラウザ内で完結するため、プライバシーが保護される。
 
+**本番環境URL**: https://resize.kojin.works
+
 ## 開発コマンド
 
 ```bash
@@ -229,3 +231,20 @@ react-helmet-asyncを使用した包括的なSEO対策：
 - AVIF形式のサポートはブラウザ依存（Chrome/Edge推奨）
 - 大容量画像（>50MB）の処理はメモリ不足の可能性あり
 - オフライン動作可能だが、初回ロードは要インターネット接続
+
+## デプロイメント
+
+### Cloudflare Pages設定
+
+- **本番環境URL**: https://resize.kojin.works
+- **プロダクションブランチ**: main
+- **フレームワークプリセット**: React (Vite)
+- **ビルドコマンド**: `bun install && bun run build`
+- **ビルド出力ディレクトリ**: `dist`
+- **環境変数**: `BUN_VERSION=1.3.1`
+
+### デプロイ手順
+
+1. `main`ブランチにプッシュすると自動的にCloudflare Pagesでビルド・デプロイされる
+2. ビルドログはCloudflare Pagesダッシュボードで確認可能
+3. デプロイには通常1-2分程度かかる
