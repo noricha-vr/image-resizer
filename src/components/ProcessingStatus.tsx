@@ -181,6 +181,9 @@ export function ProcessingStatus({
                         {result.outputFormat}
                       </span>
                     </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {(result.resizedBlob.size / 1024).toFixed(1)} KB
+                    </p>
                   </div>
 
                   {/* アクションボタン */}
