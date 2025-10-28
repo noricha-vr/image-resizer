@@ -1,5 +1,6 @@
 import type { ResizeSettings } from '../types';
 import { OutputFormat, MIME_TYPES, THUMBNAIL_SIZE } from '../types';
+import { encode as encodeAvif } from '@jsquash/avif';
 
 /**
  * アスペクト比を維持したリサイズサイズを計算
@@ -101,6 +102,19 @@ export async function convertCanvasToBlob(
   format: OutputFormat,
   quality: number
 ): Promise<Blob> {
+  // AVIF形式の場合は@jsquash/avifを使用
+  if (format === OutputFormat.AVIF) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Canvas context not available');
+    }
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const avifData = await encodeAvif(imageData, { quality });
+    return new Blob([avifData], { type: MIME_TYPES[format] });
+  }
+
+  // JPEG/PNG形式は従来通りCanvas APIを使用
   return new Promise((resolve, reject) => {
     const mimeType = MIME_TYPES[format];
     // PNGは可逆圧縮のため品質設定なし
