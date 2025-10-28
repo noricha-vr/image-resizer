@@ -1,6 +1,7 @@
 import type { ResizeSettings } from '../types';
 import { OutputFormat, MIME_TYPES, THUMBNAIL_SIZE } from '../types';
 import { encode as encodeAvif } from '@jsquash/avif';
+import { optimise as optimisePng } from '@jsquash/oxipng';
 
 /**
  * アスペクト比を維持したリサイズサイズを計算
@@ -95,6 +96,15 @@ export function resizeCanvas(
 }
 
 /**
+ * 品質パラメータ（50-100%）を@jsquash/pngのlevel（1-6）に変換
+ * 50% → level 1 (最速、最小圧縮)
+ * 100% → level 6 (最遅、最大圧縮)
+ */
+function qualityToCompressionLevel(quality: number): number {
+  return Math.round(((quality - 50) / 50) * 5) + 1;
+}
+
+/**
  * Canvasを指定形式のBlobに変換
  */
 export async function convertCanvasToBlob(
@@ -102,23 +112,32 @@ export async function convertCanvasToBlob(
   format: OutputFormat,
   quality: number
 ): Promise<Blob> {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+
   // AVIF形式の場合は@jsquash/avifを使用
   if (format === OutputFormat.AVIF) {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      throw new Error('Canvas context not available');
-    }
-
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const avifData = await encodeAvif(imageData, { quality });
     return new Blob([avifData], { type: MIME_TYPES[format] });
   }
 
-  // JPEG/PNG形式は従来通りCanvas APIを使用
+  // PNG形式の場合は@jsquash/oxipngを使用
+  if (format === OutputFormat.PNG) {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const level = qualityToCompressionLevel(quality);
+    console.log(`PNG compression - quality: ${quality}%, level: ${level}`);
+    const pngData = await optimisePng(imageData, { level });
+    console.log(`PNG output size: ${pngData.byteLength} bytes`);
+    return new Blob([pngData], { type: MIME_TYPES[format] });
+  }
+
+  // JPEG形式は従来通りCanvas APIを使用
   return new Promise((resolve, reject) => {
     const mimeType = MIME_TYPES[format];
-    // PNGは可逆圧縮のため品質設定なし
-    const qualityValue = format === OutputFormat.PNG ? undefined : quality / 100;
+    const qualityValue = quality / 100;
 
     canvas.toBlob(
       (blob) => {

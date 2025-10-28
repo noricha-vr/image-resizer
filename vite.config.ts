@@ -6,6 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   optimizeDeps: {
-    exclude: ['@jsquash/avif'],
+    exclude: ['@jsquash/avif', '@jsquash/oxipng'],
   },
 })

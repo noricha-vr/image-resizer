@@ -25,8 +25,6 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
     onChange({ ...settings, outputFormat: format });
   };
 
-  const isQualityDisabled = settings.outputFormat === OutputFormat.PNG;
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
       <h3 className="text-lg font-semibold text-gray-800">設定</h3>
@@ -75,7 +73,7 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
           ))}
         </div>
         <p className="text-xs text-gray-500">
-          JPEG/AVIF: 高圧縮 | PNG: 可逆圧縮（透過対応）
+          JPEG/AVIF: 高圧縮 | PNG: 可逆圧縮（透過対応、品質で圧縮レベル調整）
         </p>
       </div>
 
@@ -83,11 +81,6 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
           品質: {settings.quality}%
-          {isQualityDisabled && (
-            <span className="text-xs text-gray-500 ml-2">
-              （PNGは可逆圧縮のため調整不可）
-            </span>
-          )}
         </label>
         <input
           type="range"
@@ -96,13 +89,15 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
           min="50"
           max="100"
           step="5"
-          disabled={isQualityDisabled}
-          className={`w-full ${isQualityDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className="w-full"
         />
         <div className="flex justify-between text-xs text-gray-500">
           <span>低品質（小サイズ）</span>
           <span>高品質（大サイズ）</span>
         </div>
+        <p className="text-xs text-gray-500">
+          JPEG/AVIF: 画質 | PNG: 圧縮レベル（処理時間とサイズのバランス）
+        </p>
       </div>
 
       {/* 設定プレビュー */}
@@ -110,9 +105,7 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
         <h4 className="text-sm font-medium text-gray-700 mb-2">現在の設定</h4>
         <div className="text-sm text-gray-600 space-y-1">
           <p>最大サイズ: {settings.maxSize}px</p>
-          <p>
-            品質: {isQualityDisabled ? '可逆圧縮' : `${settings.quality}%`}
-          </p>
+          <p>品質: {settings.quality}%</p>
           <p>出力形式: {settings.outputFormat}</p>
         </div>
       </div>
