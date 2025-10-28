@@ -44,11 +44,11 @@ function App() {
       <SEOHead />
       <div className="min-h-screen bg-white flex flex-col">
         {/* ヘッダー */}
-        <header className="bg-cream shadow-sm">
+        <header className="bg-golden shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Image Resizer</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-white">Image Resizer</h1>
+            <p className="text-sm text-white/90">
               画像を簡単にリサイズ | JPEG / PNG / AVIF
             </p>
           </div>
@@ -120,9 +120,9 @@ function App() {
       </main>
 
       {/* フッター */}
-      <footer className="bg-cream border-t border-gray-200">
+      <footer className="bg-golden border-t border-orange">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center justify-between text-sm text-white/90">
             <p>&copy; 2025 Image Resizer. All rights reserved.</p>
             <p>Chrome推奨 | ブラウザ完結処理</p>
           </div>
