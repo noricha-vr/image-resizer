@@ -90,7 +90,7 @@ export function ProcessingStatus({
           {onReset && (queue.length > 0 || results.length > 0) && (
             <button
               onClick={onReset}
-              className="px-4 py-2 bg-red text-white rounded-md hover:bg-red-dark transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
             >
               リセット
             </button>
