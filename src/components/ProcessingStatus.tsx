@@ -169,7 +169,7 @@ export function ProcessingStatus({
                   </div>
 
                   {/* 情報 */}
-                  <div className="flex-1 min-w-0 space-y-1.5">
+                  <div className="flex-1 min-w-0">
                     {/* ファイル名 */}
                     <p className="text-base font-medium text-gray-900 truncate">
                       {result.originalFile.name}
