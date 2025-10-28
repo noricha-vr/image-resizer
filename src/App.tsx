@@ -2,8 +2,7 @@ import { useEffect } from 'react';
 import { SEOHead } from './components/SEOHead';
 import { DropZone } from './components/DropZone';
 import { SettingsPanel } from './components/SettingsPanel';
-import { ProcessingQueue } from './components/ProcessingQueue';
-import { ResultGallery } from './components/ResultGallery';
+import { ProcessingStatus } from './components/ProcessingStatus';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useImageProcessor } from './hooks/useImageProcessor';
 
@@ -58,14 +57,14 @@ function App() {
       {/* メインコンテンツ */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 左カラム: アップロードエリアと設定 */}
+          {/* 左カラム: アップロードエリアと処理状況 */}
           <div className="lg:col-span-2 space-y-6">
             <DropZone
               onFilesAccepted={handleFilesAccepted}
               onFilesRejected={handleFilesRejected}
             />
-            <ProcessingQueue queue={queue} />
-            <ResultGallery
+            <ProcessingStatus
+              queue={queue}
               results={results}
               maxSize={settings.maxSize}
               onRemove={removeResult}
