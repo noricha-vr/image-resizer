@@ -171,12 +171,12 @@ export function ProcessingStatus({
                   {/* 情報 */}
                   <div className="flex-1 min-w-0 space-y-1.5">
                     {/* ファイル名 */}
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-base font-medium text-gray-900 truncate">
                       {result.originalFile.name}
                     </p>
 
                     {/* 設定 */}
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
                       <span>最大{result.maxSize}px</span>
                       {result.outputFormat !== 'PNG' && (
                         <span>品質{result.quality}%</span>
@@ -187,7 +187,7 @@ export function ProcessingStatus({
                     </div>
 
                     {/* 出力後の情報 */}
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
                       <span>{result.width} × {result.height}</span>
                       <span>•</span>
                       <span>{(result.resizedBlob.size / 1024).toFixed(1)} KB</span>
