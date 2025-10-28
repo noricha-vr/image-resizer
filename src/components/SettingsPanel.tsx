@@ -41,13 +41,13 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
           value={settings.maxSize}
           onChange={(e) => handleMaxSizeChange(e.target.value)}
           min="10"
-          max="1980"
+          max="1920"
           step="10"
           className="w-full"
         />
         <div className="flex justify-between text-xs text-gray-500">
           <span>10px</span>
-          <span>1980px</span>
+          <span>1920px</span>
         </div>
         <p className="text-xs text-gray-500">
           画像の長辺がこのサイズにリサイズされます

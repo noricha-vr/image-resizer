@@ -52,7 +52,7 @@ bun install
 2. **設定管理**: localStorage（`imageResizerSettings`キー）で最大サイズ・品質・出力形式を永続化
 3. **ファイル名規則**: `filename_[maxsize]px.[ext]`（拡張子は選択形式に応じて.jpg/.png/.avif）
 4. **デフォルト値**: 最大サイズ720px、品質80%、出力形式JPEG
-5. **サイズ調整**: 10px〜1980pxまでスライダーで調整可能
+5. **サイズ調整**: 10px〜1920pxまでスライダーで調整可能
 6. **品質調整**: 50%〜100%まで5%刻みで調整（PNG除く）
 
 ### 実装済みディレクトリ構造
@@ -129,7 +129,7 @@ canvas.toBlob(
 ### localStorage設定管理
 ```typescript
 interface ResizeSettings {
-  maxSize: number;        // デフォルト: 720、範囲: 10-1980
+  maxSize: number;        // デフォルト: 720、範囲: 10-1920
   quality: number;        // デフォルト: 80、範囲: 50-100
   outputFormat: OutputFormat;  // デフォルト: JPEG
 }
@@ -180,7 +180,7 @@ react-helmet-asyncを使用した包括的なSEO対策：
 - レスポンシブ: `lg:col-span-2` 等のブレークポイント使用
 
 ### フォーム要素
-- スライダー入力: `type="range"` で10-1980px範囲
+- スライダー入力: `type="range"` で10-1920px範囲
 - ボタン選択: 形式選択は3つのボタン（JPEG/PNG/AVIF）
 - 無効化処理: PNG選択時はquality sliderを`disabled`に
 
