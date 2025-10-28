@@ -39,7 +39,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* ヘッダー */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -53,7 +53,7 @@ function App() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左カラム: アップロードエリアと設定 */}
           <div className="lg:col-span-2 space-y-6">
@@ -117,7 +117,7 @@ function App() {
       </main>
 
       {/* フッター */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
+      <footer className="bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between text-sm text-gray-500">
             <p>&copy; 2025 Image Resizer. All rights reserved.</p>
