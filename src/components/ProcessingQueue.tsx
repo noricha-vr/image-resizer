@@ -41,7 +41,7 @@ export function ProcessingQueue({ queue }: ProcessingQueueProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-cream/30 rounded-lg shadow-md p-6">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">
         処理キュー ({queue.length}件)
       </h3>
@@ -49,7 +49,7 @@ export function ProcessingQueue({ queue }: ProcessingQueueProps) {
         {queue.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-md"
+            className="flex items-center justify-between p-3 bg-white/80 rounded-md"
           >
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">

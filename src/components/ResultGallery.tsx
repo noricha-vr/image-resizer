@@ -21,7 +21,7 @@ export function ResultGallery({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-cream/30 rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">
           処理結果 ({results.length}件)
@@ -39,7 +39,7 @@ export function ResultGallery({
         {results.map((image) => (
           <div
             key={image.id}
-            className="bg-gray-50 rounded-lg p-3 space-y-2 hover:shadow-md transition-shadow"
+            className="bg-white/80 rounded-lg p-3 space-y-2 hover:shadow-md transition-shadow"
           >
             {/* サムネイル */}
             <div className="aspect-square bg-gray-200 rounded-md overflow-hidden">
