@@ -8,4 +8,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['@jsquash/avif', '@jsquash/oxipng'],
   },
+  worker: {
+    format: 'es',
+  },
 })
