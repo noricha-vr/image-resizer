@@ -187,7 +187,7 @@ export function ProcessingStatus({
                     </div>
 
                     {/* 出力後の情報 */}
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
                       <span>{result.width} × {result.height}</span>
                       <span>•</span>
                       <span>{(result.resizedBlob.size / 1024).toFixed(1)} KB</span>
