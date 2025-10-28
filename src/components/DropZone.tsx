@@ -36,14 +36,16 @@ export function DropZone({ onFilesAccepted, onFilesRejected }: DropZoneProps) {
       {...getRootProps()}
       className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
         isDragActive
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 hover:border-gray-400'
+          ? 'border-golden bg-golden-light/20'
+          : 'border-gray-300 hover:border-orange'
       }`}
     >
       <input {...getInputProps()} />
       <div className="space-y-4">
         <svg
-          className="mx-auto h-16 w-16 text-gray-400"
+          className={`mx-auto h-16 w-16 transition-colors ${
+            isDragActive ? 'text-golden' : 'text-gray-400'
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -56,7 +58,7 @@ export function DropZone({ onFilesAccepted, onFilesRejected }: DropZoneProps) {
           />
         </svg>
         {isDragActive ? (
-          <p className="text-lg text-blue-600 font-medium">
+          <p className="text-lg text-golden font-medium">
             ドロップして画像を追加
           </p>
         ) : (
@@ -66,7 +68,7 @@ export function DropZone({ onFilesAccepted, onFilesRejected }: DropZoneProps) {
             </p>
             <p className="text-sm text-gray-500">
               または
-              <span className="text-blue-600 font-medium ml-1">
+              <span className="text-golden font-medium ml-1">
                 クリックして選択
               </span>
             </p>

@@ -42,7 +42,7 @@ function App() {
   return (
     <>
       <SEOHead />
-      <div className="min-h-screen bg-gray-100 flex flex-col">
+      <div className="min-h-screen bg-cream flex flex-col">
         {/* ヘッダー */}
         <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -80,7 +80,7 @@ function App() {
             {(queue.length > 0 || results.length > 0) && (
               <button
                 onClick={reset}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium"
+                className="w-full px-4 py-2 bg-red text-white rounded-md hover:bg-red-dark transition-colors font-medium"
               >
                 すべてリセット
               </button>
@@ -108,7 +108,7 @@ function App() {
                   </div>
                   <div className="flex justify-between">
                     <span>エラー:</span>
-                    <span className="font-medium text-red-600">
+                    <span className="font-medium text-red">
                       {queue.filter((item) => item.status === 'ERROR').length}件
                     </span>
                   </div>

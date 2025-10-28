@@ -66,8 +66,8 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
               onClick={() => handleFormatChange(format)}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 settings.outputFormat === format
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-golden text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
               }`}
             >
               {format}

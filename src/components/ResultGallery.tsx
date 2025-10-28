@@ -29,7 +29,7 @@ export function ResultGallery({
         {results.length > 1 && (
           <button
             onClick={handleDownloadAll}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+            className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
           >
             すべてダウンロード
           </button>
@@ -59,7 +59,7 @@ export function ResultGallery({
                 <span>
                   {image.width} × {image.height}
                 </span>
-                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-medium">
+                <span className="px-2 py-0.5 bg-golden-light text-golden-dark rounded font-medium">
                   {image.outputFormat}
                 </span>
               </div>
@@ -69,14 +69,14 @@ export function ResultGallery({
             <div className="flex space-x-2">
               <button
                 onClick={() => downloadProcessedImage(image, maxSize)}
-                className="flex-1 px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 px-3 py-1.5 bg-golden text-white rounded text-xs font-medium hover:bg-orange transition-colors"
               >
                 ダウンロード
               </button>
               {onRemove && (
                 <button
                   onClick={() => onRemove(image.id)}
-                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-gray-300 transition-colors"
+                  className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-red hover:text-white transition-colors"
                 >
                   削除
                 </button>

@@ -15,11 +15,11 @@ export function ProcessingQueue({ queue }: ProcessingQueueProps) {
       case ProcessingStatus.WAITING:
         return 'text-gray-500';
       case ProcessingStatus.PROCESSING:
-        return 'text-blue-600';
+        return 'text-orange';
       case ProcessingStatus.COMPLETED:
-        return 'text-green-600';
+        return 'text-golden';
       case ProcessingStatus.ERROR:
-        return 'text-red-600';
+        return 'text-red';
       default:
         return 'text-gray-500';
     }
@@ -59,14 +59,14 @@ export function ProcessingQueue({ queue }: ProcessingQueueProps) {
                 {(item.size / 1024).toFixed(1)} KB
               </p>
               {item.error && (
-                <p className="text-xs text-red-600 mt-1">{item.error}</p>
+                <p className="text-xs text-red mt-1">{item.error}</p>
               )}
             </div>
             <div className="ml-4 flex items-center space-x-2">
               {item.status === ProcessingStatus.PROCESSING && (
                 <div className="w-16 bg-gray-200 rounded-full h-2">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-orange h-2 rounded-full transition-all duration-300"
                     style={{ width: `${item.progress}%` }}
                   />
                 </div>
