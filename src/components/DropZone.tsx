@@ -37,7 +37,7 @@ export function DropZone({ onFilesAccepted, onFilesRejected }: DropZoneProps) {
       className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
         isDragActive
           ? 'border-golden bg-golden-light/30'
-          : 'border-gray-300 hover:border-orange bg-gray-50'
+          : 'border-gray-300 hover:border-orange bg-white'
       }`}
     >
       <input {...getInputProps()} />
