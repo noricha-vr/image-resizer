@@ -19,11 +19,11 @@ export function SEOHead({
   title = 'リサイズくん - 画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】',
   description = 'ブラウザ完結で安心！リサイズくんは、プライバシー保護の無料画像リサイズ・圧縮ツール。JPEG/PNG/AVIF対応、品質調整可能。Instagram・SNS最適サイズに一発変換。サーバーアップロード不要でオフライン動作。',
   keywords = 'リサイズくん,画像リサイズ,画像圧縮,無料,JPEG,PNG,AVIF,サーバーアップロードなし,ブラウザ完結,プライバシー保護,オフライン,ローカル処理,品質調整,Instagram,SNS,画像最適化,透過PNG,次世代画像形式',
-  ogImage = '/og-image.png',
+  ogImage = '/og/image.png',
   ogType = 'website',
   twitterCard = 'summary_large_image',
 }: SEOHeadProps) {
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://image-resizer.example.com';
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://resize.kojin.works';
   const fullTitle = title.includes('リサイズくん') ? title : `${title} | リサイズくん`;
 
   return (

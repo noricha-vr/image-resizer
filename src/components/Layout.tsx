@@ -26,31 +26,34 @@ export function Layout() {
       {/* フッター */}
       <footer className="bg-golden border-t border-orange">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-white/90">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-white/90">
             {/* 左：コピーライト */}
-            <div>
+            <div className="text-center md:text-left">
               <p>&copy; 2025 リサイズくん. All rights reserved.</p>
             </div>
 
-            {/* 中央：リンク */}
-            <div className="flex gap-4 justify-center">
+            {/* 右：リンク */}
+            <div className="flex gap-4 justify-center md:justify-end">
               <Link
                 to="/privacy"
-                className="hover:text-white underline transition-colors"
+                className="hover:text-white transition-colors"
               >
                 プライバシーポリシー
               </Link>
               <Link
                 to="/terms"
-                className="hover:text-white underline transition-colors"
+                className="hover:text-white transition-colors"
               >
                 利用規約
               </Link>
-            </div>
-
-            {/* 右：特徴 */}
-            <div className="text-center md:text-right">
-              <p>Chrome推奨 | サーバーアップロード不要</p>
+              <a
+                href="https://github.com/noricha-vr/image-resizer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                GitHub
+              </a>
             </div>
           </div>
         </div>

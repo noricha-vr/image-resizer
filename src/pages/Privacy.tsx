@@ -53,8 +53,8 @@ export function Privacy() {
                   ユーザーの利便性向上のため、以下の設定情報のみをブラウザのローカルストレージに保存します：
                 </p>
                 <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
-                  <li>最大画像サイズ設定（デフォルト: 720px）</li>
-                  <li>画質設定（デフォルト: 80%）</li>
+                  <li>最大画像サイズ設定</li>
+                  <li>画質設定</li>
                   <li>出力形式設定（JPEG/PNG/AVIF）</li>
                 </ul>
               </div>
@@ -148,8 +148,8 @@ export function Privacy() {
 
           <div className="mt-12 pt-8 border-t border-gray-200">
             <p className="text-sm text-gray-600">
-              制定日: 2025年1月1日<br />
-              最終更新日: 2025年1月1日
+              制定日: 2025年10月29日<br />
+              最終更新日: 2025年10月29日
             </p>
           </div>
         </div>

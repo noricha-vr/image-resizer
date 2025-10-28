@@ -226,8 +226,8 @@ export function Terms() {
 
           <div className="mt-12 pt-8 border-t border-gray-200">
             <p className="text-sm text-gray-600">
-              制定日: 2025年1月1日<br />
-              最終更新日: 2025年1月1日
+              制定日: 2025年10月29日<br />
+              最終更新日: 2025年10月29日
             </p>
           </div>
         </div>
