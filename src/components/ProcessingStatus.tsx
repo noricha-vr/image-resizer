@@ -7,6 +7,7 @@ interface ProcessingStatusProps {
   results: ProcessedImage[];
   maxSize: number;
   onRemove?: (id: string) => void;
+  onReset?: () => void;
 }
 
 /**
@@ -17,6 +18,7 @@ export function ProcessingStatus({
   results,
   maxSize,
   onRemove,
+  onReset,
 }: ProcessingStatusProps) {
   if (queue.length === 0 && results.length === 0) {
     return null;
@@ -84,14 +86,24 @@ export function ProcessingStatus({
         <h3 className="text-lg font-semibold text-gray-800">
           処理状況 ({totalCount}件)
         </h3>
-        {results.length > 1 && (
-          <button
-            onClick={handleDownloadAll}
-            className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
-          >
-            すべてダウンロード
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onReset && (queue.length > 0 || results.length > 0) && (
+            <button
+              onClick={onReset}
+              className="px-4 py-2 bg-red text-white rounded-md hover:bg-red-dark transition-colors text-sm font-medium"
+            >
+              すべてリセット
+            </button>
+          )}
+          {results.length > 1 && (
+            <button
+              onClick={handleDownloadAll}
+              className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
+            >
+              すべてダウンロード
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -169,29 +181,24 @@ export function ProcessingStatus({
                         {result.outputFormat}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <button
-                        onClick={() => downloadProcessedImage(result, maxSize)}
-                        className="px-3 py-1.5 bg-golden text-white rounded text-xs font-medium hover:bg-orange transition-colors"
-                      >
-                        ダウンロード
-                      </button>
-                      {onRemove && (
-                        <button
-                          onClick={() => onRemove(result.id)}
-                          className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-red hover:text-white transition-colors"
-                        >
-                          削除
-                        </button>
-                      )}
-                    </div>
                   </div>
 
-                  {/* ステータス */}
-                  <div className="flex-shrink-0">
-                    <span className="text-xs font-medium text-golden">
-                      完了
-                    </span>
+                  {/* アクションボタン */}
+                  <div className="flex-shrink-0 flex flex-col gap-2">
+                    <button
+                      onClick={() => downloadProcessedImage(result, maxSize)}
+                      className="px-3 py-1.5 bg-golden text-white rounded text-xs font-medium hover:bg-orange transition-colors"
+                    >
+                      ダウンロード
+                    </button>
+                    {onRemove && (
+                      <button
+                        onClick={() => onRemove(result.id)}
+                        className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-red hover:text-white transition-colors"
+                      >
+                        削除
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

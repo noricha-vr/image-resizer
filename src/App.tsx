@@ -68,22 +68,13 @@ function App() {
               results={results}
               maxSize={settings.maxSize}
               onRemove={removeResult}
+              onReset={reset}
             />
           </div>
 
           {/* 右カラム: 設定パネル */}
           <div className="space-y-6">
             <SettingsPanel settings={settings} onChange={updateSettings} />
-
-            {/* リセットボタン */}
-            {(queue.length > 0 || results.length > 0) && (
-              <button
-                onClick={reset}
-                className="w-full px-4 py-2 bg-red text-white rounded-md hover:bg-red-dark transition-colors font-medium"
-              >
-                すべてリセット
-              </button>
-            )}
 
             {/* 統計情報 */}
             {results.length > 0 && (
