@@ -42,9 +42,9 @@ function App() {
   return (
     <>
       <SEOHead />
-      <div className="min-h-screen bg-cream flex flex-col">
+      <div className="min-h-screen bg-white flex flex-col">
         {/* ヘッダー */}
-        <header className="bg-white shadow-sm">
+        <header className="bg-cream shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">Image Resizer</h1>
@@ -120,7 +120,7 @@ function App() {
       </main>
 
       {/* フッター */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-cream border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between text-sm text-gray-500">
             <p>&copy; 2025 Image Resizer. All rights reserved.</p>
