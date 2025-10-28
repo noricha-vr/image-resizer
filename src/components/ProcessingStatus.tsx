@@ -74,11 +74,15 @@ export function ProcessingStatus({
     downloadAll(results, maxSize);
   };
 
+  // 未完了のアイテム数をカウント
+  const pendingCount = queue.filter((item) => item.status !== Status.COMPLETED).length;
+  const totalCount = pendingCount + results.length;
+
   return (
     <div className="bg-cream/30 rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">
-          処理状況 ({queue.length + results.length}件)
+          処理状況 ({totalCount}件)
         </h3>
         {results.length > 1 && (
           <button
