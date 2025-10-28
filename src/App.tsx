@@ -75,36 +75,6 @@ function App() {
           {/* 右カラム: 設定パネル */}
           <div className="space-y-6">
             <SettingsPanel settings={settings} onChange={updateSettings} />
-
-            {/* 統計情報 */}
-            {results.length > 0 && (
-              <div className="bg-cream/30 rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                  統計
-                </h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex justify-between">
-                    <span>処理済み:</span>
-                    <span className="font-medium">{results.length}件</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>待機中:</span>
-                    <span className="font-medium">
-                      {
-                        queue.filter((item) => item.status === 'WAITING').length
-                      }
-                      件
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>エラー:</span>
-                    <span className="font-medium text-red">
-                      {queue.filter((item) => item.status === 'ERROR').length}件
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </main>
