@@ -6,10 +6,11 @@
 
 ```yaml
 project:
-  name: "Image Resizer"
+  name: "リサイズくん (Image Resizer)"
   version: "1.0.0"
-  type: "Single Page Application"
+  type: "Single Page Application with React Router"
   description: "ドラッグ&ドロップで簡単に画像をJPEG/PNG/AVIF形式にリサイズできるウェブサービス"
+  deploy_url: "https://resize.kojin.works"
 
 requirements:
   functional:
@@ -41,32 +42,41 @@ requirements:
 
 ```yaml
 frontend:
-  language: TypeScript
-  framework: React 18
-  build_tool: Vite
-  styling: TailwindCSS
-  browser_support: Chrome最新版のみ
-  
+  language: TypeScript 5.9
+  framework: React 19.1
+  build_tool: Vite 7.1
+  styling: TailwindCSS v4
+  router: React Router 7.9
+  browser_support: Chrome推奨（主要ブラウザ対応）
+
 deployment:
   platform: Cloudflare Pages
   cdn: Cloudflare CDN
-  
+  url: https://resize.kojin.works
+
 libraries:
   - react-dropzone: "ドラッグ&ドロップ機能"
-  
+  - react-helmet-async: "SEOメタタグ管理"
+  - react-router-dom: "ページルーティング"
+  - "@jsquash/avif": "AVIF形式圧縮"
+  - "@jsquash/oxipng": "PNG形式最適化"
+
 development:
-  package_manager: npm
+  package_manager: Bun
   linter: ESLint
-  formatter: Prettier
+  test_framework: Vitest
+  testing_library: React Testing Library
 ```
 
 ### 2.1 技術選定理由
 
-- **React + Vite**: 高速なビルドとHMR、シンプルな設定
-- **TypeScript**: 型安全性による開発効率向上
-- **TailwindCSS**: ユーティリティファーストによる迅速なUI開発
-- **Cloudflare Pages**: 無料枠が充実、高速なCDN、簡単なデプロイ
-- **Chrome専用**: 最新のWeb APIを活用し、開発・テストを効率化
+- **React 19 + Vite 7**: 最新機能による高速なビルドとHMR、シンプルな設定
+- **TypeScript 5.9**: 型安全性と最新のverbatimModuleSyntax対応
+- **TailwindCSS v4**: 新しいViteプラグイン対応、ユーティリティファーストによる迅速なUI開発
+- **Bun**: npmより高速なパッケージマネージャー、TypeScript/JSXネイティブサポート
+- **@jsquash**: WebAssemblyベースの高品質画像圧縮ライブラリ
+- **React Router 7**: 最新のルーティング機能、法的ページ対応
+- **Cloudflare Pages**: 無料枠が充実、高速なCDN、GitHub連携による簡単なデプロイ
 
 ## 3. ディレクトリ構造
 
@@ -75,42 +85,51 @@ image-resizer/
 ├── src/
 │   ├── components/
 │   │   ├── DropZone.tsx          # ドラッグ&ドロップエリア
-│   │   ├── ImageProcessor.tsx    # 画像処理コンポーネント
-│   │   ├── ProcessingQueue.tsx   # 処理キュー表示
-│   │   ├── ResultGallery.tsx     # 処理結果ギャラリー
-│   │   ├── SettingsPanel.tsx     # サイズ・形式設定パネル
-│   │   └── ThumbnailCard.tsx     # サムネイル表示カード
+│   │   ├── Layout.tsx            # 共通レイアウト（ヘッダー・フッター）
+│   │   ├── ProcessingStatus.tsx  # 処理キュー・結果表示
+│   │   ├── SettingsPanel.tsx     # サイズ・品質・形式設定パネル
+│   │   └── SEOHead.tsx           # SEOメタタグ管理（Helmet）
+│   ├── pages/
+│   │   ├── Home.tsx              # ホームページ（メイン機能）
+│   │   ├── Privacy.tsx           # プライバシーポリシー
+│   │   ├── Terms.tsx             # 利用規約
+│   │   └── NotFound.tsx          # 404ページ
 │   ├── hooks/
-│   │   ├── useImageProcessor.ts  # 画像処理カスタムフック
-│   │   ├── useDropzone.ts        # ドロップゾーンフック
+│   │   ├── useImageProcessor.ts  # 画像処理・キュー管理フック
 │   │   └── useLocalStorage.ts    # localStorage管理フック
 │   ├── utils/
-│   │   ├── imageResizer.ts       # リサイズ処理ロジック
+│   │   ├── imageResizer.ts       # リサイズ処理ロジック（@jsquash使用）
 │   │   ├── fileValidator.ts      # ファイル検証
 │   │   ├── downloadHelper.ts     # ダウンロード処理
 │   │   └── storageHelper.ts      # localStorage管理
 │   ├── types/
 │   │   └── index.ts              # TypeScript型定義
-│   ├── styles/
-│   │   └── globals.css           # グローバルスタイル
-│   ├── App.tsx                   # メインアプリコンポーネント
-│   └── main.tsx                  # エントリーポイント
+│   ├── test/
+│   │   └── setup.ts              # テスト環境設定
+│   ├── App.tsx                   # ルーター設定
+│   ├── main.tsx                  # エントリーポイント（HelmetProvider）
+│   └── index.css                 # TailwindCSS v4インポート
 ├── public/
-│   └── favicon.ico               # ファビコン
-├── tests/
-│   ├── unit/                     # 単体テスト
-│   └── e2e/                      # E2Eテスト
-├── .github/
-│   └── workflows/
-│       └── deploy.yml            # CI/CDワークフロー
-├── package.json                  # パッケージ定義
+│   ├── favicon.ico               # ファビコン
+│   ├── favicon-16x16.png         # 16x16ファビコン
+│   ├── favicon-32x32.png         # 32x32ファビコン
+│   ├── apple-touch-icon.png      # Apple Touch Icon
+│   ├── android-chrome-*.png      # Android用アイコン
+│   ├── site.webmanifest          # PWAマニフェスト
+│   ├── robots.txt                # クローラー制御
+│   ├── sitemap.xml               # サイトマップ
+│   ├── og/image.png              # OG画像
+│   └── _redirects                # Cloudflare Pages リダイレクト設定
+├── docs/
+│   └── image-resizer-design.md   # 設計書
+├── LICENSE                       # MITライセンス
+├── CLAUDE.md                     # プロジェクト設定
+├── package.json                  # パッケージ定義（Bun）
+├── bun.lockb                     # Bunロックファイル
 ├── tsconfig.json                 # TypeScript設定
-├── vite.config.ts               # Vite設定
-├── tailwind.config.js           # TailwindCSS設定
-├── postcss.config.js            # PostCSS設定
-├── .eslintrc.json              # ESLint設定
-├── .prettierrc                  # Prettier設定
-└── README.md                    # プロジェクト説明
+├── vite.config.ts                # Vite設定（TailwindCSS v4プラグイン）
+├── eslint.config.js              # ESLint設定（Flat Config）
+└── README.md                     # プロジェクト説明
 ```
 
 ## 4. UMLによるシステムアーキテクチャ
@@ -437,15 +456,23 @@ User --> UC5
 ```yaml
 sitemap:
   - path: /
-    title: "Image Resizer - 画像リサイズツール"
-    type: "Single Page Application"
+    title: "リサイズくん - 画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】"
+    type: "Home Page"
     sections:
       - id: "header"
-        components: ["Logo", "Settings Button"]
+        components: ["Logo", "Navigation (Privacy, Terms)"]
       - id: "main"
-        components: ["DropZone", "ProcessingQueue", "ResultGallery"]
+        components: ["H1 Title", "Description", "DropZone", "SettingsPanel", "ProcessingStatus"]
       - id: "footer"
-        components: ["Copyright", "Privacy Policy Link"]
+        components: ["Copyright", "GitHub Link", "Privacy Policy", "Terms"]
+
+  - path: /privacy
+    title: "プライバシーポリシー | リサイズくん"
+    type: "Legal Page"
+
+  - path: /terms
+    title: "利用規約 | リサイズくん"
+    type: "Legal Page"
 ```
 
 ### 8.2 ページレイアウト構造
@@ -788,9 +815,138 @@ ux_considerations:
     - 形式選択ボタン（JPEG/PNG/AVIF）
 ```
 
-## 13. 付録
+## 13. SEO対策実装
 
-### 13.1 用語集
+### 13.1 包括的SEO実装
+
+本プロジェクトでは、検索エンジン最適化とソーシャルメディア対応のため、以下のSEO対策を実装しています。
+
+#### 静的メタデータ（index.html）
+```html
+<!-- JavaScript実行前のSEO対策 -->
+<title>リサイズくん - 画像リサイズ・圧縮ツール【無料・サーバーアップロード不要】</title>
+<meta name="description" content="ブラウザ完結で安心！リサイズくんは、プライバシー保護の無料画像リサイズ・圧縮ツール..." />
+<link rel="canonical" href="https://resize.kojin.works/" />
+```
+
+#### 動的メタデータ（SEOHead.tsx）
+react-helmet-asyncを使用した動的メタタグ管理：
+
+```yaml
+meta_tags:
+  basic:
+    - title: ページタイトル（ブランド名自動付与）
+    - description: ページ説明文
+    - keywords: 検索キーワード
+    - canonical: 正規URL（動的生成）
+
+  open_graph:
+    - og:title: SNSシェア用タイトル
+    - og:description: SNSシェア用説明
+    - og:type: website
+    - og:url: 動的URL
+    - og:image: OG画像（1200x630px）
+    - og:locale: ja_JP
+    - og:site_name: リサイズくん
+
+  twitter_card:
+    - twitter:card: summary_large_image
+    - twitter:title: Twitterシェア用タイトル
+    - twitter:description: Twitter説明
+    - twitter:image: Twitter画像
+
+  pwa:
+    - theme-color: #2563eb
+    - apple-mobile-web-app-capable: yes
+    - apple-mobile-web-app-title: リサイズくん
+```
+
+#### 構造化データ（JSON-LD）
+Schema.org準拠のWebApplicationデータ：
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "リサイズくん",
+  "description": "...",
+  "url": "https://resize.kojin.works",
+  "applicationCategory": "UtilityApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "noricha-vr",
+    "url": "https://github.com/noricha-vr"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "kojin.works",
+    "url": "https://kojin.works"
+  },
+  "datePublished": "2025-10-29",
+  "dateModified": "2025-10-29",
+  "softwareVersion": "1.0.0",
+  "featureList": [...]
+}
+```
+
+#### SEOファイル
+```yaml
+robots.txt:
+  - User-agent: *
+  - Allow: /
+  - Sitemap: https://resize.kojin.works/sitemap.xml
+
+sitemap.xml:
+  pages:
+    - url: https://resize.kojin.works/
+      priority: 1.0
+      changefreq: monthly
+    - url: https://resize.kojin.works/privacy
+      priority: 0.5
+      changefreq: yearly
+    - url: https://resize.kojin.works/terms
+      priority: 0.5
+      changefreq: yearly
+```
+
+#### SEO改善履歴
+
+**2025-10-29 包括的SEO対策実施**
+- P0（緊急）対応:
+  - robots.txt/sitemap.xmlのURL修正（example.com → resize.kojin.works）
+  - sitemap.xmlの日付更新
+  - H1タグ追加（見出し階層エラー解消）
+  - Canonical URLの動的設定
+- P1（高優先度）対応:
+  - index.htmlに静的メタデータ追加
+  - 構造化データ改善（aggregateRating削除、author/publisher追加）
+
+#### 期待される効果
+```yaml
+short_term: # 1ヶ月
+  - Google Search Consoleへのインデックス登録
+  - クロールエラーの解消
+  - 基本的な検索可視性の向上
+
+mid_term: # 3ヶ月
+  - ブランドキーワード（"リサイズくん"）での上位表示
+  - SNSシェア時の適切なプレビュー表示
+  - 構造化データのリッチリザルト表示
+
+long_term: # 6ヶ月以降
+  - 一般キーワード（"画像リサイズ 無料"等）での上位表示
+  - オーガニックトラフィックの増加
+  - プライバシー保護訴求での差別化
+```
+
+## 14. 付録
+
+### 14.1 用語集
 
 ```yaml
 glossary:
@@ -801,7 +957,7 @@ glossary:
   - WCAG: Web Content Accessibility Guidelines、アクセシビリティ基準
 ```
 
-### 13.2 参考資料
+### 14.2 参考資料
 
 ```yaml
 references:
@@ -820,7 +976,7 @@ references:
     - Web Image Formats Guide
 ```
 
-### 13.3 今後の拡張案
+### 14.3 今後の拡張案
 
 ```yaml
 future_enhancements:
@@ -841,7 +997,7 @@ future_enhancements:
     - ダークモード対応
 ```
 
-## 13.4 実装の重要ポイント
+### 14.4 実装の重要ポイント
 
 ```yaml
 format_conversion:
@@ -928,32 +1084,44 @@ format_conversion:
       }
 ```
 
-## 14. プロジェクト初期設定コマンド
+## 15. プロジェクト初期設定コマンド
 
 ```bash
+# Bunのインストール（未インストールの場合）
+curl -fsSL https://bun.sh/install | bash
+
 # プロジェクト作成
-npm create vite@latest image-resizer -- --template react-ts
+bun create vite@latest image-resizer -- --template react-ts
 cd image-resizer
 
 # 依存関係インストール
-npm install react-dropzone
-npm install -D tailwindcss postcss autoprefixer
-npm install -D @types/react @types/react-dom
-
-# TailwindCSS初期化
-npx tailwindcss init -p
-
-# ESLint/Prettier設定
-npm install -D eslint @eslint/js @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react-hooks eslint-plugin-react-refresh prettier
+bun add react-dropzone react-helmet-async react-router-dom
+bun add @jsquash/avif @jsquash/oxipng
+bun add -D @tailwindcss/vite tailwindcss
+bun add -D @types/react @types/react-dom @types/node
 
 # テストツール
-npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event
+bun add -D vitest @testing-library/react @testing-library/jest-dom jsdom
 
-# ビルド
-npm run build
+# ESLint設定
+bun add -D eslint @eslint/js typescript-eslint eslint-plugin-react-hooks eslint-plugin-react-refresh globals
+
+# 開発サーバー起動
+bun run dev
+
+# TypeScriptチェック + ビルド
+bun run build
+
+# プレビュー
+bun run preview
+
+# テスト実行
+bun test
 
 # Cloudflare Pagesへのデプロイ
 # GitHubと連携して自動デプロイ設定
+# ビルドコマンド: bun run build
+# 出力ディレクトリ: dist
 ```
 
 ---
