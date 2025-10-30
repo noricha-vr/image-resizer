@@ -181,13 +181,10 @@ export function ProcessingStatus({
 
                   {/* 情報 */}
                   <div className="flex-1 min-w-0">
-                    {/* 形式バッジと拡張子 */}
-                    <div className="mb-1 flex items-center gap-2">
+                    {/* 形式バッジ */}
+                    <div className="mb-1">
                       <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-sm inline-block">
                         {result.outputFormat}
-                      </span>
-                      <span className="text-sm text-gray-600">
-                        {getExtensionFromFormat(result.outputFormat)}
                       </span>
                     </div>
 
@@ -204,7 +201,7 @@ export function ProcessingStatus({
                     </div>
 
                     {/* 元画像のファイルサイズ → 変換後画像のファイルサイズ（減少率%） */}
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-700">
                       {(() => {
                         const originalSize = result.originalFile.size;
                         const resultSize = result.resizedBlob.size;
@@ -213,9 +210,14 @@ export function ProcessingStatus({
                             ? ((1 - resultSize / originalSize) * 100).toFixed(1)
                             : '0.0';
                         return (
-                          <span>
-                            {formatBytes(originalSize)} → {formatBytes(resultSize)}（-{reduction}%）
-                          </span>
+                          <>
+                            <span>
+                              {formatBytes(originalSize)} → <span className="text-gray-900 font-semibold">{formatBytes(resultSize)}</span>
+                            </span>
+                            <span className="text-orange font-semibold ml-1">
+                              （-{reduction}%）
+                            </span>
+                          </>
                         );
                       })()}
                     </div>
