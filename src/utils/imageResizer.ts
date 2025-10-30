@@ -159,9 +159,11 @@ export async function convertCanvasToBlob(
 export async function resizeImage(
   file: File,
   settings: ResizeSettings
-): Promise<Blob> {
+): Promise<{ blob: Blob; originalWidth: number; originalHeight: number }> {
   // 画像をCanvasに読み込み
   const { canvas, width, height } = await loadImageToCanvas(file);
+  const originalWidth = width;
+  const originalHeight = height;
 
   // リサイズがOFFの場合は元のサイズのまま
   let targetCanvas = canvas;
@@ -186,7 +188,7 @@ export async function resizeImage(
     settings.quality
   );
 
-  return blob;
+  return { blob, originalWidth, originalHeight };
 }
 
 /**
@@ -223,11 +225,21 @@ export async function createThumbnail(
 export async function processImage(
   file: File,
   settings: ResizeSettings
-): Promise<{ resizedBlob: Blob; thumbnailBlob: Blob }> {
-  const [resizedBlob, thumbnailBlob] = await Promise.all([
+): Promise<{
+  resizedBlob: Blob;
+  thumbnailBlob: Blob;
+  originalWidth: number;
+  originalHeight: number;
+}> {
+  const [resizedResult, thumbnailBlob] = await Promise.all([
     resizeImage(file, settings),
     createThumbnail(file, settings.outputFormat, settings.quality),
   ]);
 
-  return { resizedBlob, thumbnailBlob };
+  return {
+    resizedBlob: resizedResult.blob,
+    thumbnailBlob,
+    originalWidth: resizedResult.originalWidth,
+    originalHeight: resizedResult.originalHeight,
+  };
 }

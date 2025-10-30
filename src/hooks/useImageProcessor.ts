@@ -50,10 +50,12 @@ export function useImageProcessor(settings: ResizeSettings) {
         );
 
         // 画像処理を実行
-        const { resizedBlob, thumbnailBlob } = await processImage(
-          imageFile.file,
-          settings
-        );
+        const {
+          resizedBlob,
+          thumbnailBlob,
+          originalWidth,
+          originalHeight,
+        } = await processImage(imageFile.file, settings);
 
         // Canvasから画像サイズを取得
         const img = new Image();
@@ -73,6 +75,8 @@ export function useImageProcessor(settings: ResizeSettings) {
           thumbnailBlob,
           width: img.naturalWidth,
           height: img.naturalHeight,
+          originalWidth,
+          originalHeight,
           downloadUrl: createDownloadUrl(resizedBlob),
           thumbnailUrl: createDownloadUrl(thumbnailBlob),
           outputFormat: settings.outputFormat,

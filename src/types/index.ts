@@ -46,6 +46,8 @@ export interface ProcessedImage {
   thumbnailBlob: Blob;
   width: number;
   height: number;
+  originalWidth: number;
+  originalHeight: number;
   downloadUrl: string;
   thumbnailUrl: string;
   outputFormat: OutputFormat;

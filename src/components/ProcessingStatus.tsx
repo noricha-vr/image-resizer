@@ -1,6 +1,7 @@
 import type { ImageFile, ProcessedImage } from '../types';
 import { ProcessingStatus as Status } from '../types';
 import { downloadProcessedImage, downloadAll } from '../utils/downloadHelper';
+import { formatBytes, getExtensionFromFormat } from '../utils/size';
 
 interface ProcessingStatusProps {
   queue: ImageFile[];
@@ -120,7 +121,7 @@ export function ProcessingStatus({
                     {item.name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {(item.size / 1024).toFixed(1)} KB
+                    {formatBytes(item.size)}
                   </p>
                   {item.error && (
                     <p className="text-xs text-red mt-1">{item.error}</p>
@@ -180,10 +181,13 @@ export function ProcessingStatus({
 
                   {/* 情報 */}
                   <div className="flex-1 min-w-0">
-                    {/* 形式バッジ */}
-                    <div className="mb-1">
+                    {/* 形式バッジと拡張子 */}
+                    <div className="mb-1 flex items-center gap-2">
                       <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-sm inline-block">
                         {result.outputFormat}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {getExtensionFromFormat(result.outputFormat)}
                       </span>
                     </div>
 
@@ -192,22 +196,28 @@ export function ProcessingStatus({
                       {result.originalFile.name}
                     </p>
 
-                    {/* 設定情報 */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      {result.resizeEnabled && <span>最大{result.maxSize}px</span>}
-                      {result.resizeEnabled && result.outputFormat !== 'PNG' && (
-                        <span>•</span>
-                      )}
-                      {result.outputFormat !== 'PNG' && (
-                        <span>品質{result.quality}%</span>
-                      )}
+                    {/* 元画像の縦横px → 変換後の縦横px */}
+                    <div className="text-sm text-gray-600 mb-1">
+                      <span>
+                        {result.originalWidth} × {result.originalHeight} → {result.width} × {result.height}
+                      </span>
                     </div>
 
-                    {/* 出力後の情報 */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>{result.width} × {result.height}</span>
-                      <span>•</span>
-                      <span>{(result.resizedBlob.size / 1024).toFixed(1)} KB</span>
+                    {/* 元画像のファイルサイズ → 変換後画像のファイルサイズ（減少率%） */}
+                    <div className="text-sm text-gray-600">
+                      {(() => {
+                        const originalSize = result.originalFile.size;
+                        const resultSize = result.resizedBlob.size;
+                        const reduction =
+                          originalSize > 0
+                            ? ((1 - resultSize / originalSize) * 100).toFixed(1)
+                            : '0.0';
+                        return (
+                          <span>
+                            {formatBytes(originalSize)} → {formatBytes(resultSize)}（-{reduction}%）
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
 

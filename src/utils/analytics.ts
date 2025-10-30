@@ -32,13 +32,9 @@ let isInitialized = false;
 /**
  * GA4を初期化
  * 本番環境のみで動作します
+ * （main.tsxで環境チェック済み）
  */
 export function initAnalytics(measurementId: string): void {
-  // 本番環境以外では何もしない
-  if (!import.meta.env.PROD) {
-    return;
-  }
-
   // 既に初期化済みの場合は何もしない
   if (isInitialized) {
     return;
@@ -61,6 +57,14 @@ export function initAnalytics(measurementId: string): void {
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+  script.onload = () => {
+    // スクリプト読み込み完了を確認（デバッグ用）
+    console.log('[GA4] Script loaded successfully');
+  };
+  script.onerror = () => {
+    // スクリプト読み込みエラーを確認（デバッグ用）
+    console.error('[GA4] Failed to load script');
+  };
   document.head.appendChild(script);
 
   // 初期化イベントを送信
@@ -68,6 +72,7 @@ export function initAnalytics(measurementId: string): void {
   gtag('config', measurementId);
 
   isInitialized = true;
+  console.log('[GA4] Initialized with measurement ID:', measurementId);
 }
 
 /**
@@ -78,14 +83,12 @@ export function trackEvent(
   eventName: string,
   params?: Record<string, unknown>
 ): void {
-  // 本番環境以外では何もしない
-  if (!import.meta.env.PROD) {
-    return;
-  }
-
   // gtagが利用可能な場合のみ送信
   if (window.gtag) {
     window.gtag('event', eventName, params);
+  } else {
+    // デバッグ用: gtagが利用できない場合
+    console.warn('[GA4] gtag is not available. Event not sent:', eventName);
   }
 }
 
