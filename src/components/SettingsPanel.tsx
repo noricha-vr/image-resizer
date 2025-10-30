@@ -30,7 +30,7 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
+    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 space-y-6">
       <h3 className="text-lg font-semibold text-gray-800">設定</h3>
 
       {/* リサイズON/OFFトグル */}
