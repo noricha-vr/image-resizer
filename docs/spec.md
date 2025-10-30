@@ -121,6 +121,14 @@ src/
 
 ## 変更履歴
 
+### 2025年10月
+
+#### PWAアプリ名を「リサイズくん」に統一
+
+- PWA manifest（vite-plugin-pwa設定および `public/site.webmanifest`）の `name` / `short_name` を「リサイズくん」に統一
+- `lang: ja` を明示し、日本語名・メタデータの整合性を確保
+- 開発（ngrok）と本番の名称不一致を解消
+
 ### 2025年1月
 
 #### サイズ比較と削減率表示機能の追加
