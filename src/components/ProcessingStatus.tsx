@@ -195,9 +195,15 @@ export function ProcessingStatus({
 
                     {/* 元画像の縦横px → 変換後の縦横px */}
                     <div className="text-sm text-gray-600 mb-1">
-                      <span>
-                        {result.originalWidth} × {result.originalHeight} → {result.width} × {result.height}
-                      </span>
+                      {result.originalWidth === result.width && result.originalHeight === result.height ? (
+                        <span>
+                          {result.originalWidth} × {result.originalHeight}
+                        </span>
+                      ) : (
+                        <span>
+                          {result.originalWidth} × {result.originalHeight} → {result.width} × {result.height}
+                        </span>
+                      )}
                     </div>
 
                     {/* 元画像のファイルサイズ → 変換後画像のファイルサイズ（減少率%） */}
