@@ -69,9 +69,6 @@ export function ProcessingStatus({
     }
   };
 
-  // キューと結果を結合してマップを作成
-  const resultMap = new Map(results.map((r) => [r.id, r]));
-
   const handleDownloadAll = () => {
     downloadAll(results, maxSize);
   };
@@ -84,7 +81,7 @@ export function ProcessingStatus({
     <div className="bg-cream/30 rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800">
-          処理状況 ({totalCount}件)
+          処理結果 ({totalCount}件)
         </h3>
         <div className="flex items-center gap-2">
           {onReset && (queue.length > 0 || results.length > 0) && (
@@ -110,6 +107,8 @@ export function ProcessingStatus({
         {/* 待機中・処理中のアイテム */}
         {queue
           .filter((item) => item.status !== Status.COMPLETED)
+          .slice()
+          .reverse()
           .map((item) => (
             <div
               key={item.id}
@@ -161,17 +160,14 @@ export function ProcessingStatus({
           ))}
 
         {/* 完了したアイテム */}
-        {queue
-          .filter((item) => item.status === Status.COMPLETED)
-          .map((item) => {
-            const result = resultMap.get(item.id);
-            if (!result) return null;
-
-            return (
-              <div
-                key={item.id}
-                className="bg-golden/10 rounded-md p-3 space-y-2"
-              >
+        {results
+          .slice()
+          .reverse()
+          .map((result) => (
+            <div
+              key={result.id}
+              className="bg-golden/10 rounded-md p-3 space-y-2"
+            >
                 <div className="flex items-start gap-3">
                   {/* サムネイル */}
                   <div className="w-25 h-25 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
@@ -198,12 +194,12 @@ export function ProcessingStatus({
 
                     {/* 設定情報 */}
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>最大{result.maxSize}px</span>
+                      {result.resizeEnabled && <span>最大{result.maxSize}px</span>}
+                      {result.resizeEnabled && result.outputFormat !== 'PNG' && (
+                        <span>•</span>
+                      )}
                       {result.outputFormat !== 'PNG' && (
-                        <>
-                          <span>•</span>
-                          <span>品質{result.quality}%</span>
-                        </>
+                        <span>品質{result.quality}%</span>
                       )}
                     </div>
 
@@ -234,8 +230,7 @@ export function ProcessingStatus({
                   </div>
                 </div>
               </div>
-            );
-          })}
+            ))}
       </div>
     </div>
   );
