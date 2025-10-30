@@ -99,7 +99,12 @@ image-resizer/
 │   ├── App.tsx              # メインアプリケーション
 │   └── main.tsx             # エントリーポイント
 ├── docs/                    # ドキュメント
-│   └── image-resizer-design.md
+│   ├── README.md            # ドキュメントインデックス
+│   ├── spec.md              # プロジェクト仕様書
+│   └── design/              # 詳細設計
+│       ├── architecture.md  # アーキテクチャ・UML図
+│       ├── color-scheme.md  # デザインシステム
+│       └── seo.md           # SEO戦略
 ├── tests/                   # テストファイル
 ├── public/                  # 静的ファイル
 └── dist/                    # ビルド出力
@@ -128,6 +133,18 @@ image-resizer/
 元のファイル名_[サイズ]px.拡張子
 例: photo_720px.jpg
 ```
+
+## 📚 ドキュメント
+
+プロジェクトの詳細なドキュメントは以下を参照してください：
+
+- **[ドキュメント一覧](./docs/README.md)** - すべてのドキュメントへのインデックス
+- **[プロジェクト仕様書](./docs/spec.md)** - 機能仕様・技術スタック・GA4トラッキング
+- **[アーキテクチャ設計](./docs/design/architecture.md)** - 詳細設計・UML図
+- **[デザインシステム](./docs/design/color-scheme.md)** - カラースキーマ・UIガイドライン
+- **[SEO戦略](./docs/design/seo.md)** - メタタグ・構造化データ
+
+開発者の方は [プロジェクト仕様書](./docs/spec.md) から始めることをおすすめします。
 
 ## 設定
 
@@ -194,7 +211,7 @@ noricha-vr
 
 ## リンク
 
-- [ドキュメント](./docs/image-resizer-design.md)
+- [ドキュメント一覧](./docs/README.md)
 - [プロジェクト設定](./CLAUDE.md)
 - [課題トラッカー](https://github.com/noricha-vr/image-resizer/issues)
 
