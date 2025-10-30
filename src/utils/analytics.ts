@@ -3,7 +3,6 @@
  * すべての環境で動作します
  */
 
-type GtagCommand = 'config' | 'event' | 'js';
 type GtagConfig = (
   command: 'config',
   targetId: string,
@@ -43,11 +42,7 @@ export function initAnalytics(measurementId: string): void {
   window.dataLayer = window.dataLayer || [];
 
   // gtag関数を定義
-  const gtag: GtagFunction = function (
-    this: unknown,
-    command: GtagCommand,
-    ...args: unknown[]
-  ): void {
+  const gtag: GtagFunction = function (this: unknown): void {
     // Google Analyticsの公式実装に従い、argumentsをそのままpush
     // eslint-disable-next-line prefer-rest-params
     window.dataLayer?.push(arguments);
