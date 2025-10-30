@@ -5,6 +5,15 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: false, // 本番環境でもconsole.logを残す
+        drop_debugger: true,
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
