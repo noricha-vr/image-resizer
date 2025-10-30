@@ -163,17 +163,20 @@ export async function resizeImage(
   // 画像をCanvasに読み込み
   const { canvas, width, height } = await loadImageToCanvas(file);
 
-  // リサイズサイズを計算
-  const { width: newWidth, height: newHeight } = calculateResizeSize(
-    width,
-    height,
-    settings.maxSize
-  );
-
-  // リサイズが必要な場合
+  // リサイズがOFFの場合は元のサイズのまま
   let targetCanvas = canvas;
-  if (newWidth !== width || newHeight !== height) {
-    targetCanvas = resizeCanvas(canvas, newWidth, newHeight);
+  if (settings.resizeEnabled) {
+    // リサイズサイズを計算
+    const { width: newWidth, height: newHeight } = calculateResizeSize(
+      width,
+      height,
+      settings.maxSize
+    );
+
+    // リサイズが必要な場合
+    if (newWidth !== width || newHeight !== height) {
+      targetCanvas = resizeCanvas(canvas, newWidth, newHeight);
+    }
   }
 
   // 指定形式のBlobに変換

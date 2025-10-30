@@ -57,6 +57,7 @@ export interface ProcessedImage {
  * リサイズ設定
  */
 export interface ResizeSettings {
+  resizeEnabled: boolean;
   maxSize: number;
   quality: number;
   outputFormat: OutputFormat;
@@ -92,6 +93,7 @@ export const FILE_EXTENSIONS: Record<OutputFormat, string> = {
  * デフォルト設定
  */
 export const DEFAULT_SETTINGS: ResizeSettings = {
+  resizeEnabled: true,
   maxSize: 720,
   quality: 80,
   outputFormat: OutputFormat.JPEG,

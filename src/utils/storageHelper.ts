@@ -28,6 +28,10 @@ export function loadSettings(): ResizeSettings {
 
     // バリデーション: 必須フィールドのチェック
     const settings: ResizeSettings = {
+      resizeEnabled:
+        typeof parsed.resizeEnabled === 'boolean'
+          ? parsed.resizeEnabled
+          : DEFAULT_SETTINGS.resizeEnabled,
       maxSize:
         typeof parsed.maxSize === 'number' && parsed.maxSize > 0
           ? parsed.maxSize

@@ -34,9 +34,11 @@ requirements:
 - **リサイズ処理**: Canvas APIを使用したクライアントサイドリサイズ（JPEG/PNG/AVIF選択可能）
 - **プレビュー表示**: 150pxサムネイルによる処理結果確認
 - **ダウンロード**: 個別ダウンロードまたは一括ダウンロード
-- **サイズ設定**: 最大サイズの変更機能（デフォルト720px、localStorage保存）
+- **リサイズON/OFF**: リサイズ機能の有効/無効を切り替え可能（デフォルトON）
+- **サイズ設定**: 最大サイズの変更機能（デフォルト720px、localStorage保存、リサイズON時のみ表示）
 - **品質設定**: 50-100%のスライダー調整（デフォルト80%）
 - **出力形式選択**: JPEG/PNG/AVIF から選択可能（デフォルトJPEG）
+- **圧縮のみモード**: リサイズOFF時は元の画像サイズのまま圧縮のみ適用
 
 ## 2. 技術スタック概要
 
@@ -280,8 +282,8 @@ class ProcessedImage {
 }
 
 class ResizeSettings {
-    +maxWidth: number
-    +maxHeight: number
+    +resizeEnabled: boolean
+    +maxSize: number
     +quality: number
     +outputFormat: OutputFormat
     +saveToLocalStorage(): void
@@ -415,6 +417,7 @@ rectangle "画像リサイズシステム" {
     usecase "ファイル選択" as UC1_2
     
     usecase "リサイズ設定変更" as UC2
+    usecase "リサイズON/OFF切り替え" as UC2_0
     usecase "最大サイズ指定" as UC2_1
     usecase "品質設定" as UC2_2
     
@@ -434,6 +437,7 @@ UC1 <|-- UC1_1
 UC1 <|-- UC1_2
 
 User --> UC2
+UC2 <|-- UC2_0
 UC2 <|-- UC2_1
 UC2 <|-- UC2_2
 
@@ -767,7 +771,8 @@ image_processing_tips:
 
   localStorage_management:
     - 設定保存キー: 'imageResizerSettings'
-    - 最大サイズ: デフォルト720px
+    - リサイズ有効/無効: デフォルトtrue（ON）
+    - 最大サイズ: デフォルト720px（リサイズON時のみ使用）
     - 品質設定: デフォルト80%
     - 出力形式: デフォルトJPEG
 ```
@@ -926,6 +931,14 @@ sitemap.xml:
   - index.htmlに静的メタデータ追加
   - 構造化データ改善（aggregateRating削除、author/publisher追加）
 
+#### 機能追加履歴
+
+**2025-10-30 リサイズON/OFFトグル機能追加**
+- リサイズ機能の有効/無効を切り替え可能にするトグルボタンを追加
+- リサイズOFF時は最大サイズ設定を非表示
+- リサイズOFF時は元の画像サイズのまま圧縮のみ適用
+- ResizeSettings型に`resizeEnabled`フィールドを追加（デフォルト: true）
+
 #### 期待される効果
 ```yaml
 short_term: # 1ヶ月
@@ -1043,11 +1056,13 @@ format_conversion:
   localStorage_structure:
     key: "imageResizerSettings"
     data:
-      maxSize: 720
+      resizeEnabled: true  # リサイズON/OFF（デフォルトtrue）
+      maxSize: 720  # 最大サイズ（リサイズON時のみ使用）
       quality: 80  # パーセント値で保存
       outputFormat: "JPEG"  # デフォルト
     example: |
       const defaultSettings = {
+        resizeEnabled: true,
         maxSize: 720,
         quality: 80,
         outputFormat: 'JPEG'
