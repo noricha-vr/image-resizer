@@ -12,9 +12,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Image Resizer',
-        short_name: 'ImageResizer',
-        description: 'ブラウザ完結で安心！リサイズくんは、プライバシー保護の無料画像リサイズ・圧縮ツール。',
+        name: 'リサイズ君',
+        short_name: 'リサイズ君',
+        description: 'ブラウザ完結で安心！リサイズ君は、プライバシー保護の無料画像リサイズ・圧縮ツール。',
         theme_color: '#F5A623',
         background_color: '#F5E6D3',
         display: 'standalone',

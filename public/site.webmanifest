@@ -1,6 +1,6 @@
 {
-  "name": "Image Resizer",
-  "short_name": "ImageResizer",
+  "name": "リサイズ君",
+  "short_name": "リサイズ君",
   "start_url": "/",
   "scope": "/",
   "orientation": "any",
