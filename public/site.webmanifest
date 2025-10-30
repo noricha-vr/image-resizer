@@ -1,6 +1,10 @@
 {
   "name": "Image Resizer",
   "short_name": "ImageResizer",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "any",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
