@@ -43,12 +43,15 @@ export function initAnalytics(measurementId: string): void {
   window.dataLayer = window.dataLayer || [];
 
   // gtag関数を定義
-  const gtag: GtagFunction = ((
+  const gtag: GtagFunction = function (
+    this: unknown,
     command: GtagCommand,
     ...args: unknown[]
-  ): void => {
-    window.dataLayer?.push([command, ...args]);
-  }) as GtagFunction;
+  ): void {
+    // Google Analyticsの公式実装に従い、argumentsをそのままpush
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer?.push(arguments);
+  } as GtagFunction;
 
   window.gtag = gtag;
 
@@ -57,12 +60,10 @@ export function initAnalytics(measurementId: string): void {
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
   script.onload = () => {
-    // スクリプト読み込み完了を確認（デバッグ用）
-    console.log('[GA4] Script loaded successfully');
+    console.log('[GA4] Analytics script loaded');
   };
   script.onerror = () => {
-    // スクリプト読み込みエラーを確認（デバッグ用）
-    console.error('[GA4] Failed to load script');
+    console.error('[GA4] Failed to load Analytics script');
   };
   document.head.appendChild(script);
 
@@ -85,9 +86,6 @@ export function trackEvent(
   // gtagが利用可能な場合のみ送信
   if (window.gtag) {
     window.gtag('event', eventName, params);
-  } else {
-    // デバッグ用: gtagが利用できない場合
-    console.warn('[GA4] gtag is not available. Event not sent:', eventName);
   }
 }
 
