@@ -1,7 +1,7 @@
 import type { ImageFile, ProcessedImage } from '../types';
 import { ProcessingStatus as Status } from '../types';
 import { downloadProcessedImage, downloadAll } from '../utils/downloadHelper';
-import { formatBytes, getExtensionFromFormat } from '../utils/size';
+import { formatBytes } from '../utils/size';
 
 interface ProcessingStatusProps {
   queue: ImageFile[];
