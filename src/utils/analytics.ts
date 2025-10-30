@@ -1,6 +1,6 @@
 /**
  * Google Analytics 4 (GA4) トラッキングユーティリティ
- * 本番環境のみで動作します
+ * すべての環境で動作します
  */
 
 type GtagCommand = 'config' | 'event' | 'js';
@@ -31,8 +31,7 @@ let isInitialized = false;
 
 /**
  * GA4を初期化
- * 本番環境のみで動作します
- * （main.tsxで環境チェック済み）
+ * すべての環境で動作します
  */
 export function initAnalytics(measurementId: string): void {
   // 既に初期化済みの場合は何もしない
@@ -77,7 +76,7 @@ export function initAnalytics(measurementId: string): void {
 
 /**
  * カスタムイベントを送信
- * 本番環境のみで動作します
+ * すべての環境で動作します
  */
 export function trackEvent(
   eventName: string,

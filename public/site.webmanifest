@@ -1,8 +1,9 @@
 {
-  "name": "Image Resizer",
-  "short_name": "ImageResizer",
+  "name": "リサイズくん",
+  "short_name": "リサイズくん",
   "start_url": "/",
   "scope": "/",
+  "lang": "ja",
   "orientation": "any",
   "categories": ["utilities", "productivity"],
   "icons": [
