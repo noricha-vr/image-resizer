@@ -71,6 +71,7 @@ export function useImageProcessor(settings: ResizeSettings) {
           downloadUrl: createDownloadUrl(resizedBlob),
           thumbnailUrl: createDownloadUrl(thumbnailBlob),
           outputFormat: settings.outputFormat,
+          resizeEnabled: settings.resizeEnabled,
           maxSize: settings.maxSize,
           quality: settings.quality,
         };

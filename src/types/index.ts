@@ -49,6 +49,7 @@ export interface ProcessedImage {
   downloadUrl: string;
   thumbnailUrl: string;
   outputFormat: OutputFormat;
+  resizeEnabled: boolean;
   maxSize: number;
   quality: number;
 }

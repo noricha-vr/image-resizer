@@ -15,11 +15,18 @@ export function removeFileExtension(fileName: string): string {
  */
 export function generateFileName(
   originalName: string,
+  resizeEnabled: boolean,
   maxSize: number,
   format: OutputFormat
 ): string {
   const nameWithoutExt = removeFileExtension(originalName);
   const extension = FILE_EXTENSIONS[format];
+  
+  // リサイズOFF時はファイル名にサイズを含めない
+  if (!resizeEnabled) {
+    return `${nameWithoutExt}${extension}`;
+  }
+  
   return `${nameWithoutExt}_${maxSize}px${extension}`;
 }
 
@@ -65,6 +72,7 @@ export function downloadProcessedImage(
 ): void {
   const fileName = generateFileName(
     image.originalFile.name,
+    image.resizeEnabled,
     maxSize,
     image.outputFormat
   );
