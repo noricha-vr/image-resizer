@@ -87,7 +87,7 @@ describe('fileValidator', () => {
       );
       const result = validateFile(largeFile);
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('ファイルサイズが大きすぎます（最大10MB）');
+      expect(result.errors).toContain('ファイルサイズが大きすぎます（最大50MB）');
     });
 
     it('複数のエラーがある場合は全て含まれる', () => {

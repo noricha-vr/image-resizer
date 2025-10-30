@@ -7,7 +7,7 @@ describe('DropZone', () => {
     render(<DropZone onFilesAccepted={() => {}} />);
     expect(screen.getByText('画像をドラッグ&ドロップ')).toBeInTheDocument();
     expect(screen.getByText('クリックして選択')).toBeInTheDocument();
-    expect(screen.getByText('対応形式: JPEG、PNG、WebP、GIF（最大10MB）')).toBeInTheDocument();
+    expect(screen.getByText('対応形式: JPEG、PNG、WebP、GIF（最大50MB）')).toBeInTheDocument();
   });
 
   it('onFilesAcceptedコールバックが渡される', () => {

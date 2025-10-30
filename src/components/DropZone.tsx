@@ -73,7 +73,7 @@ export function DropZone({ onFilesAccepted, onFilesRejected }: DropZoneProps) {
               </span>
             </p>
             <p className="text-xs text-gray-400 mt-2">
-              対応形式: JPEG、PNG、WebP、GIF（最大10MB）
+              対応形式: JPEG、PNG、WebP、GIF（最大50MB）
             </p>
           </>
         )}
