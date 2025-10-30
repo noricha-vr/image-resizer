@@ -101,9 +101,9 @@ export const DEFAULT_SETTINGS: ResizeSettings = {
 };
 
 /**
- * ファイルサイズの上限（50MB）
+ * ファイルサイズの上限（1GB）
  */
-export const MAX_FILE_SIZE = 50 * 1024 * 1024;
+export const MAX_FILE_SIZE = 1024 * 1024 * 1024;
 
 /**
  * サムネイルサイズ

@@ -653,7 +653,7 @@ image_processing_tips:
 error_handling:
   user_errors:
     - 非画像ファイル: "画像ファイルを選択してください"
-    - サイズ超過: "ファイルサイズが大きすぎます（最大50MB）"
+    - サイズ超過: "ファイルサイズが大きすぎます（最大1024MB）"
     - 処理失敗: "画像の処理に失敗しました"
     
   system_errors:
