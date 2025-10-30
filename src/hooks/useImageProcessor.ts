@@ -3,6 +3,10 @@ import type { ImageFile, ProcessedImage, ResizeSettings } from '../types';
 import { ProcessingStatus } from '../types';
 import { processImage } from '../utils/imageResizer';
 import { createDownloadUrl } from '../utils/downloadHelper';
+import {
+  trackImageConverted,
+  trackImageConvertError,
+} from '../utils/analytics';
 
 /**
  * 画像処理管理カスタムフック
@@ -34,6 +38,7 @@ export function useImageProcessor(settings: ResizeSettings) {
    */
   const processSingleFile = useCallback(
     async (imageFile: ImageFile): Promise<ProcessedImage | null> => {
+      const startTime = performance.now();
       try {
         // ステータスを処理中に更新
         setQueue((prev) =>
@@ -85,6 +90,20 @@ export function useImageProcessor(settings: ResizeSettings) {
           )
         );
 
+        // トラッキングイベントを送信
+        const durationMs = Math.round(performance.now() - startTime);
+        trackImageConverted({
+          outputFormat: settings.outputFormat,
+          resizeEnabled: settings.resizeEnabled,
+          maxSize: settings.maxSize,
+          quality: settings.quality,
+          originalBytes: imageFile.size,
+          resultBytes: resizedBlob.size,
+          resultWidth: img.naturalWidth,
+          resultHeight: img.naturalHeight,
+          durationMs,
+        });
+
         return processedImage;
       } catch (error) {
         // エラー時のステータス更新
@@ -102,6 +121,20 @@ export function useImageProcessor(settings: ResizeSettings) {
               : item
           )
         );
+
+        // エラートラッキングイベントを送信
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : '画像の処理に失敗しました';
+        trackImageConvertError({
+          message: errorMessage.slice(0, 100),
+          outputFormat: settings.outputFormat,
+          resizeEnabled: settings.resizeEnabled,
+          maxSize: settings.maxSize,
+          quality: settings.quality,
+        });
+
         return null;
       }
     },
