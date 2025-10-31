@@ -171,85 +171,86 @@ export function ProcessingStatus({
               key={result.id}
               className="bg-golden/10 rounded-md p-3 space-y-2"
             >
-                <div className="flex items-start gap-3">
-                  {/* サムネイル */}
-                  <div className="w-25 h-25 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                    <img
-                      src={result.thumbnailUrl}
-                      alt={result.originalFile.name}
-                      className="w-full h-full object-cover"
-                    />
+              {/* サムネイルと情報 */}
+              <div className="flex items-start gap-3">
+                {/* サムネイル */}
+                <div className="w-20 h-20 sm:w-25 sm:h-25 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                  <img
+                    src={result.thumbnailUrl}
+                    alt={result.originalFile.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* 情報 */}
+                <div className="flex-1 min-w-0">
+                  {/* 形式バッジ */}
+                  <div className="mb-1">
+                    <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-xs sm:text-sm inline-block">
+                      {result.outputFormat}
+                    </span>
                   </div>
 
-                  {/* 情報 */}
-                  <div className="flex-1 min-w-0">
-                    {/* 形式バッジ */}
-                    <div className="mb-1">
-                      <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-sm inline-block">
-                        {result.outputFormat}
+                  {/* ファイル名 */}
+                  <p className="text-sm sm:text-base font-medium text-gray-900 truncate mb-1">
+                    {result.originalFile.name}
+                  </p>
+
+                  {/* 元画像の縦横px → 変換後の縦横px */}
+                  <div className="text-xs sm:text-sm text-gray-600 mb-0.5">
+                    {result.originalWidth === result.width && result.originalHeight === result.height ? (
+                      <span>
+                        {result.originalWidth} × {result.originalHeight}
                       </span>
-                    </div>
-
-                    {/* ファイル名 */}
-                    <p className="text-base font-medium text-gray-900 truncate mb-1">
-                      {result.originalFile.name}
-                    </p>
-
-                    {/* 元画像の縦横px → 変換後の縦横px */}
-                    <div className="text-sm text-gray-600 mb-1">
-                      {result.originalWidth === result.width && result.originalHeight === result.height ? (
-                        <span>
-                          {result.originalWidth} × {result.originalHeight}
-                        </span>
-                      ) : (
-                        <span>
-                          {result.originalWidth} × {result.originalHeight} → {result.width} × {result.height}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* 元画像のファイルサイズ → 変換後画像のファイルサイズ（減少率%） */}
-                    <div className="text-sm text-gray-700">
-                      {(() => {
-                        const originalSize = result.originalFile.size;
-                        const resultSize = result.resizedBlob.size;
-                        const reduction =
-                          originalSize > 0
-                            ? ((1 - resultSize / originalSize) * 100).toFixed(1)
-                            : '0.0';
-                        return (
-                          <>
-                            <span>
-                              {formatBytes(originalSize)} → <span className="text-gray-900 font-semibold">{formatBytes(resultSize)}</span>
-                            </span>
-                            <span className="text-orange font-semibold ml-1">
-                              （-{reduction}%）
-                            </span>
-                          </>
-                        );
-                      })()}
-                    </div>
+                    ) : (
+                      <span>
+                        {result.originalWidth} × {result.originalHeight} → {result.width} × {result.height}
+                      </span>
+                    )}
                   </div>
 
-                  {/* アクションボタン */}
-                  <div className="flex-shrink-0 flex flex-col gap-2">
-                    <button
-                      onClick={() => downloadProcessedImage(result, maxSize)}
-                      className="px-3 py-1.5 bg-golden text-white rounded text-xs font-medium hover:bg-orange transition-colors"
-                    >
-                      ダウンロード
-                    </button>
-                    {onRemove && (
-                      <button
-                        onClick={() => onRemove(result.id)}
-                        className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-red hover:text-white transition-colors"
-                      >
-                        削除
-                      </button>
-                    )}
+                  {/* 元画像のファイルサイズ → 変換後画像のファイルサイズ（減少率%） */}
+                  <div className="text-xs sm:text-sm text-gray-700">
+                    {(() => {
+                      const originalSize = result.originalFile.size;
+                      const resultSize = result.resizedBlob.size;
+                      const reduction =
+                        originalSize > 0
+                          ? ((1 - resultSize / originalSize) * 100).toFixed(1)
+                          : '0.0';
+                      return (
+                        <>
+                          <span>
+                            {formatBytes(originalSize)} → <span className="text-gray-900 font-semibold">{formatBytes(resultSize)}</span>
+                          </span>
+                          <span className="text-orange font-semibold ml-1">
+                            （-{reduction}%）
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
+
+              {/* アクションボタン */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => downloadProcessedImage(result, maxSize)}
+                  className="flex-1 px-3 py-1.5 bg-golden text-white rounded text-xs font-medium hover:bg-orange transition-colors"
+                >
+                  ダウンロード
+                </button>
+                {onRemove && (
+                  <button
+                    onClick={() => onRemove(result.id)}
+                    className="flex-1 px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-red hover:text-white transition-colors"
+                  >
+                    削除
+                  </button>
+                )}
+              </div>
+            </div>
             ))}
       </div>
     </div>
