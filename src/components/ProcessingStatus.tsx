@@ -80,27 +80,29 @@ export function ProcessingStatus({
 
   return (
     <div className="bg-cream/30 rounded-lg shadow-md p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">
-          処理結果 ({totalCount}件)
-        </h3>
-        <div className="flex items-center gap-2">
-          {onReset && (queue.length > 0 || results.length > 0) && (
-            <button
-              onClick={onReset}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
-            >
-              リセット
-            </button>
-          )}
-          {results.length > 0 && (
-            <button
-              onClick={handleDownloadAll}
-              className="px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
-            >
-              すべてダウンロード
-            </button>
-          )}
+      <div className="mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h3 className="text-lg font-semibold text-gray-800">
+            処理結果 ({totalCount}件)
+          </h3>
+          <div className="flex gap-2">
+            {onReset && (queue.length > 0 || results.length > 0) && (
+              <button
+                onClick={onReset}
+                className="flex-1 sm:flex-none px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                リセット
+              </button>
+            )}
+            {results.length > 0 && (
+              <button
+                onClick={handleDownloadAll}
+                className="flex-1 sm:flex-none px-4 py-2 bg-golden text-white rounded-md hover:bg-orange transition-colors text-sm font-medium"
+              >
+                すべてダウンロード
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
