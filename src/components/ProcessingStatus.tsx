@@ -106,7 +106,7 @@ export function ProcessingStatus({
         </div>
       </div>
 
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+      <div className="space-y-3">
         {/* 待機中・処理中のアイテム */}
         {queue
           .filter((item) => item.status !== Status.COMPLETED)
