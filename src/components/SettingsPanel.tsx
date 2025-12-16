@@ -252,20 +252,25 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
 
               {/* クロップ設定 */}
               <div className="space-y-3 pt-2 border-t border-gray-200">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="crop-enabled"
-                    checked={settings.crop.enabled}
-                    onChange={handleCropToggle}
-                    className="w-4 h-4 text-golden rounded focus:ring-golden"
-                  />
-                  <label
-                    htmlFor="crop-enabled"
-                    className="text-sm font-medium text-gray-700"
-                  >
-                    切り取り（クロップ）を有効にする
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-medium text-gray-700">
+                    切り取り（クロップ）
                   </label>
+                  <button
+                    type="button"
+                    onClick={handleCropToggle}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-golden focus:ring-offset-2 ${
+                      settings.crop.enabled ? 'bg-golden' : 'bg-gray-200'
+                    }`}
+                    role="switch"
+                    aria-checked={settings.crop.enabled}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        settings.crop.enabled ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
                 </div>
                 {settings.crop.enabled && (
                   <div className="space-y-2">
