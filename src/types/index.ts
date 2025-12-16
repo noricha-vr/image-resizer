@@ -159,6 +159,7 @@ export interface ResizeSettings {
   outputFormat: OutputFormat;
   sizeMode: SizeMode;
   crop: CropSettings;
+  autoDownload: boolean;
 }
 
 /**
@@ -200,6 +201,7 @@ export const DEFAULT_SETTINGS: ResizeSettings = {
     enabled: false,
     aspectRatio: '16:9',
   },
+  autoDownload: false,
 };
 
 /**

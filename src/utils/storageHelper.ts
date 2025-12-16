@@ -68,6 +68,10 @@ export function loadSettings(): ResizeSettings {
             ? (parsed.crop.aspectRatio as CropAspectRatioKey)
             : DEFAULT_SETTINGS.crop.aspectRatio,
       },
+      autoDownload:
+        typeof parsed.autoDownload === 'boolean'
+          ? parsed.autoDownload
+          : DEFAULT_SETTINGS.autoDownload,
     };
 
     return settings;

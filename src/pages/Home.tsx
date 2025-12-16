@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { SEOHead } from '../components/SEOHead';
 import { DropZone } from '../components/DropZone';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { ProcessingStatus } from '../components/ProcessingStatus';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useImageProcessor } from '../hooks/useImageProcessor';
+import { downloadProcessedImage } from '../utils/downloadHelper';
 
 /**
  * ホームページコンポーネント
@@ -22,12 +23,28 @@ export function Home() {
     removeResult,
   } = useImageProcessor(settings);
 
+  // 自動ダウンロード済みのIDを追跡
+  const downloadedIdsRef = useRef<Set<string>>(new Set());
+
   // ファイルが追加されたら自動的に処理を開始
   useEffect(() => {
     if (queue.length > 0 && !isProcessing) {
       processQueue();
     }
   }, [queue.length, isProcessing, processQueue]);
+
+  // 自動ダウンロード機能
+  useEffect(() => {
+    if (!settings.autoDownload) return;
+
+    // 新しい結果を検出してダウンロード
+    for (const result of results) {
+      if (!downloadedIdsRef.current.has(result.id)) {
+        downloadedIdsRef.current.add(result.id);
+        downloadProcessedImage(result, settings.maxSize);
+      }
+    }
+  }, [results, settings.autoDownload, settings.maxSize]);
 
   const handleFilesAccepted = (files: File[]) => {
     addToQueue(files);
@@ -40,6 +57,12 @@ export function Home() {
       console.error(`Failed to process ${file.name}:`, errors);
       alert(`${file.name}: ${errors.join(', ')}`);
     });
+  };
+
+  // リセット時にダウンロード済みIDもクリア
+  const handleReset = () => {
+    downloadedIdsRef.current.clear();
+    reset();
   };
 
   return (
@@ -68,7 +91,7 @@ export function Home() {
               results={results}
               maxSize={settings.maxSize}
               onRemove={removeResult}
-              onReset={reset}
+              onReset={handleReset}
             />
           </div>
 
