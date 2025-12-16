@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { validateFiles } from '../utils/fileValidator';
+import { validateFiles } from '../../utils/fileValidator';
 
 interface DropZoneProps {
   onFilesAccepted: (files: File[]) => void;

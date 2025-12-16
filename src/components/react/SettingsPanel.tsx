@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { ResizeSettings, CropAspectRatioKey, PresetSizeKey } from '../types';
+import type { ResizeSettings, CropAspectRatioKey, PresetSizeKey } from '../../types';
 import {
   OutputFormat,
   SizeMode,
   PresetSize,
   CropAspectRatio,
   ExtendedPresetSizes,
-} from '../types';
+} from '../../types';
 
 interface SettingsPanelProps {
   settings: ResizeSettings;

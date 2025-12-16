@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { DropZone } from '../../src/components/DropZone';
+import { DropZone } from '../../src/components/react/DropZone';
 
 describe('DropZone', () => {
   it('初期表示のテキストが表示される', () => {

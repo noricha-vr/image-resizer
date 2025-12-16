@@ -9,9 +9,17 @@ import {
 const STORAGE_KEY = 'imageResizerSettings';
 
 /**
+ * ブラウザ環境かどうかをチェック（SSR対応）
+ */
+function isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+}
+
+/**
  * 設定をlocalStorageに保存
  */
 export function saveSettings(settings: ResizeSettings): void {
+  if (!isBrowser()) return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   } catch (error) {
@@ -23,6 +31,9 @@ export function saveSettings(settings: ResizeSettings): void {
  * localStorageから設定を読み込み
  */
 export function loadSettings(): ResizeSettings {
+  if (!isBrowser()) {
+    return DEFAULT_SETTINGS;
+  }
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) {
@@ -85,6 +96,7 @@ export function loadSettings(): ResizeSettings {
  * 設定をデフォルトにリセット
  */
 export function resetSettings(): ResizeSettings {
+  if (!isBrowser()) return DEFAULT_SETTINGS;
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
@@ -97,6 +109,7 @@ export function resetSettings(): ResizeSettings {
  * localStorageが利用可能かチェック
  */
 export function isLocalStorageAvailable(): boolean {
+  if (!isBrowser()) return false;
   try {
     const test = '__localStorage_test__';
     localStorage.setItem(test, test);

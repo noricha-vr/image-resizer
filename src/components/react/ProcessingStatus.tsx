@@ -1,7 +1,7 @@
-import type { ImageFile, ProcessedImage, OutputFormat } from '../types';
-import { ProcessingStatus as Status, FILE_EXTENSIONS, OutputFormat as Format } from '../types';
-import { downloadProcessedImage, downloadAll, removeFileExtension } from '../utils/downloadHelper';
-import { formatBytes } from '../utils/size';
+import type { ImageFile, ProcessedImage, OutputFormat } from '../../types';
+import { ProcessingStatus as Status, FILE_EXTENSIONS, OutputFormat as Format } from '../../types';
+import { downloadProcessedImage, downloadAll, removeFileExtension } from '../../utils/downloadHelper';
+import { formatBytes } from '../../utils/size';
 
 interface ProcessingStatusProps {
   queue: ImageFile[];
