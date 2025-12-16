@@ -14,6 +14,10 @@
   --color-orange-dark: #D66632;
   --color-red-light: #E54A5A;
   --color-red-dark: #A00116;
+
+  /* Format Badge Colors */
+  --color-teal: #3D9A8B;
+  --color-teal-dark: #2D7A6D;
 }
 
 /* Range Input Custom Styles */

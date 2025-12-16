@@ -1,5 +1,5 @@
-import type { ImageFile, ProcessedImage } from '../types';
-import { ProcessingStatus as Status, FILE_EXTENSIONS } from '../types';
+import type { ImageFile, ProcessedImage, OutputFormat } from '../types';
+import { ProcessingStatus as Status, FILE_EXTENSIONS, OutputFormat as Format } from '../types';
 import { downloadProcessedImage, downloadAll, removeFileExtension } from '../utils/downloadHelper';
 import { formatBytes } from '../utils/size';
 
@@ -67,6 +67,19 @@ export function ProcessingStatus({
         return 'bg-red/10';
       default:
         return 'bg-gray-100';
+    }
+  };
+
+  const getFormatBadgeColor = (format: OutputFormat) => {
+    switch (format) {
+      case Format.JPEG:
+        return 'bg-golden';
+      case Format.PNG:
+        return 'bg-teal';
+      case Format.AVIF:
+        return 'bg-orange';
+      default:
+        return 'bg-golden';
     }
   };
 
@@ -187,7 +200,7 @@ export function ProcessingStatus({
                   <div className="flex-1 min-w-0">
                     {/* 形式バッジ */}
                     <div className="mb-1">
-                      <span className="px-2 py-0.5 bg-golden text-white rounded font-medium text-xs sm:text-sm inline-block">
+                      <span className={`px-2 py-0.5 text-white rounded font-medium text-xs sm:text-sm inline-block ${getFormatBadgeColor(result.outputFormat)}`}>
                         {result.outputFormat}
                       </span>
                     </div>
