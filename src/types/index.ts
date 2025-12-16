@@ -26,6 +26,7 @@ export const PresetSize = {
   SD: 640,
   HD: 1280,
   FHD: 1920,
+  '2K': 2560,
   '4K': 3840,
 } as const;
 

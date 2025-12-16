@@ -175,12 +175,12 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
                 <label className="block text-sm font-medium text-gray-700">
                   長辺サイズを選択: {settings.maxSize}px
                 </label>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-5 gap-2">
                   {(Object.keys(PresetSize) as PresetSizeKey[]).map((key) => (
                     <button
                       key={key}
                       onClick={() => handlePresetSizeChange(key)}
-                      className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                      className={`px-2 py-3 rounded-lg font-medium transition-all ${
                         getCurrentPresetKey() === key
                           ? 'bg-golden text-white ring-2 ring-golden-dark'
                           : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
