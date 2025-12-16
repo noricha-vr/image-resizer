@@ -46,6 +46,9 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true, // 新しいService Workerを即座にアクティブ化
+        clientsClaim: true, // 新しいService Workerが即座に制御を引き継ぐ
+        cleanupOutdatedCaches: true, // 古いキャッシュを自動削除
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
