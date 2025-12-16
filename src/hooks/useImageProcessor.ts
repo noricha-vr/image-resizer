@@ -1,20 +1,240 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { ImageFile, ProcessedImage, ResizeSettings } from '../types';
 import { ProcessingStatus } from '../types';
-import { processImage } from '../utils/imageResizer';
 import { createDownloadUrl } from '../utils/downloadHelper';
 import {
   trackImageConverted,
   trackImageConvertError,
 } from '../utils/analytics';
+import type { WorkerResponse } from '../workers/imageProcessor.types';
+import ImageProcessorWorker from '../workers/imageProcessor.worker?worker';
 
 /**
- * 画像処理管理カスタムフック
+ * 画像処理管理カスタムフック（Web Worker版）
  */
 export function useImageProcessor(settings: ResizeSettings) {
   const [queue, setQueue] = useState<ImageFile[]>([]);
   const [results, setResults] = useState<ProcessedImage[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Worker インスタンス
+  const workerRef = useRef<Worker | null>(null);
+  // 処理開始時刻（トラッキング用）
+  const startTimesRef = useRef<Map<string, number>>(new Map());
+  // 送信済みファイルID（重複送信防止）
+  const sentIdsRef = useRef<Set<string>>(new Set());
+  // 処理済みファイルID（重複結果防止）
+  const processedIdsRef = useRef<Set<string>>(new Set());
+  // ファイル情報のキャッシュ（状態に依存せずアクセス可能）
+  const fileInfoRef = useRef<Map<string, ImageFile>>(new Map());
+  // 設定の最新値
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  /**
+   * ファイルをWorkerに送信（重複チェック付き）
+   */
+  const sendToWorker = useCallback((file: ImageFile) => {
+    if (!workerRef.current) return false;
+    if (sentIdsRef.current.has(file.id)) {
+      console.warn(`[Worker] Already sent: ${file.id}`);
+      return false;
+    }
+
+    sentIdsRef.current.add(file.id);
+    startTimesRef.current.set(file.id, performance.now());
+
+    workerRef.current.postMessage({
+      type: 'processImage',
+      id: file.id,
+      file: file.file,
+      settings: {
+        resizeEnabled: settingsRef.current.resizeEnabled,
+        maxSize: settingsRef.current.maxSize,
+        quality: settingsRef.current.quality,
+        outputFormat: settingsRef.current.outputFormat,
+        sizeMode: settingsRef.current.sizeMode,
+        crop: {
+          enabled: settingsRef.current.crop.enabled,
+          aspectRatio: settingsRef.current.crop.aspectRatio,
+        },
+      },
+    });
+
+    return true;
+  }, []);
+
+  /**
+   * Worker を初期化
+   */
+  useEffect(() => {
+    const worker = new ImageProcessorWorker();
+
+    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+      const response = event.data;
+
+      switch (response.type) {
+        case 'progress':
+          setQueue((prev) =>
+            prev.map((item) =>
+              item.id === response.id
+                ? { ...item, status: ProcessingStatus.PROCESSING, progress: response.progress }
+                : item
+            )
+          );
+          break;
+
+        case 'result': {
+          // 重複結果防止チェック（メッセージハンドラレベルで早期リターン）
+          if (processedIdsRef.current.has(response.id)) {
+            return;
+          }
+          processedIdsRef.current.add(response.id);
+
+          const startTime = startTimesRef.current.get(response.id);
+          const durationMs = startTime ? Math.round(performance.now() - startTime) : 0;
+          startTimesRef.current.delete(response.id);
+
+          // ファイル情報をrefから取得（状態に依存しない）
+          const cachedFileInfo = fileInfoRef.current.get(response.id);
+          const originalFile: ImageFile = cachedFileInfo || {
+            id: response.id,
+            file: new File([], ''),
+            name: response.id.split('-')[0] || '',
+            size: 0,
+            type: '',
+            status: ProcessingStatus.COMPLETED,
+            progress: 100,
+          };
+
+          // 処理結果オブジェクトを作成
+          const processedImage: ProcessedImage = {
+            id: response.id,
+            originalFile: { ...originalFile, status: ProcessingStatus.COMPLETED, progress: 100 },
+            resizedBlob: response.resizedBlob,
+            thumbnailBlob: response.thumbnailBlob,
+            width: response.width,
+            height: response.height,
+            originalWidth: response.originalWidth,
+            originalHeight: response.originalHeight,
+            downloadUrl: createDownloadUrl(response.resizedBlob),
+            thumbnailUrl: createDownloadUrl(response.thumbnailBlob),
+            outputFormat: settingsRef.current.outputFormat,
+            resizeEnabled: settingsRef.current.resizeEnabled,
+            maxSize: settingsRef.current.maxSize,
+            quality: settingsRef.current.quality,
+            cropped: response.cropped,
+            cropAspectRatio: response.cropped ? settingsRef.current.crop.aspectRatio : undefined,
+          };
+
+          // アナリティクス送信（状態更新の外で実行）
+          if (cachedFileInfo) {
+            trackImageConverted({
+              outputFormat: settingsRef.current.outputFormat,
+              resizeEnabled: settingsRef.current.resizeEnabled,
+              maxSize: settingsRef.current.maxSize,
+              quality: settingsRef.current.quality,
+              originalBytes: cachedFileInfo.size,
+              resultBytes: response.resizedBlob.size,
+              resultWidth: response.width,
+              resultHeight: response.height,
+              durationMs,
+            });
+          }
+
+          // 結果追加（純粋な状態更新のみ）
+          setResults((prevResults) => {
+            if (prevResults.some((r) => r.id === response.id)) {
+              return prevResults;
+            }
+            return [...prevResults, processedImage];
+          });
+
+          // キューのステータス更新（純粋な状態更新のみ）
+          setQueue((prev) => {
+            const updated = prev.map((item) =>
+              item.id === response.id
+                ? { ...item, status: ProcessingStatus.COMPLETED, progress: 100 }
+                : item
+            );
+
+            // 待機中ファイルを送信
+            const waitingFiles = updated.filter((item) => item.status === ProcessingStatus.WAITING);
+            for (const file of waitingFiles) {
+              sendToWorker(file);
+            }
+
+            // 処理完了チェック
+            const hasActiveFiles = updated.some(
+              (item) => item.status === ProcessingStatus.WAITING || item.status === ProcessingStatus.PROCESSING
+            );
+            if (!hasActiveFiles) {
+              setIsProcessing(false);
+            }
+
+            return updated.map((item) =>
+              waitingFiles.some((w) => w.id === item.id)
+                ? { ...item, status: ProcessingStatus.PROCESSING }
+                : item
+            );
+          });
+          break;
+        }
+
+        case 'error': {
+          startTimesRef.current.delete(response.id);
+
+          setQueue((prev) => {
+            const imageFile = prev.find((item) => item.id === response.id);
+
+            if (imageFile) {
+              trackImageConvertError({
+                message: response.message.slice(0, 100),
+                outputFormat: settingsRef.current.outputFormat,
+                resizeEnabled: settingsRef.current.resizeEnabled,
+                maxSize: settingsRef.current.maxSize,
+                quality: settingsRef.current.quality,
+              });
+            }
+
+            // ステータス更新と待機中ファイルの処理を1回のsetQueueで行う
+            const updated = prev.map((item) =>
+              item.id === response.id
+                ? { ...item, status: ProcessingStatus.ERROR, error: response.message }
+                : item
+            );
+
+            // 待機中ファイルを送信
+            const waitingFiles = updated.filter((item) => item.status === ProcessingStatus.WAITING);
+            for (const file of waitingFiles) {
+              sendToWorker(file);
+            }
+
+            // 処理完了チェック
+            const hasActiveFiles = updated.some(
+              (item) => item.status === ProcessingStatus.WAITING || item.status === ProcessingStatus.PROCESSING
+            );
+            if (!hasActiveFiles) {
+              setIsProcessing(false);
+            }
+
+            return updated.map((item) =>
+              waitingFiles.some((w) => w.id === item.id)
+                ? { ...item, status: ProcessingStatus.PROCESSING }
+                : item
+            );
+          });
+          break;
+        }
+      }
+    };
+
+    workerRef.current = worker;
+
+    return () => {
+      worker.terminate();
+    };
+  }, [sendToWorker]);
 
   /**
    * キューにファイルを追加
@@ -30,151 +250,50 @@ export function useImageProcessor(settings: ResizeSettings) {
       progress: 0,
     }));
 
+    // ファイル情報をrefにキャッシュ（状態に依存せずアクセス可能にする）
+    for (const item of newItems) {
+      fileInfoRef.current.set(item.id, item);
+    }
+
     setQueue((prev) => [...prev, ...newItems]);
   }, []);
 
   /**
-   * 単一ファイルを処理
+   * キュー内の待機中ファイルを処理開始
    */
-  const processSingleFile = useCallback(
-    async (imageFile: ImageFile): Promise<ProcessedImage | null> => {
-      const startTime = performance.now();
-      try {
-        // ステータスを処理中に更新
-        setQueue((prev) =>
-          prev.map((item) =>
-            item.id === imageFile.id
-              ? { ...item, status: ProcessingStatus.PROCESSING, progress: 50 }
-              : item
-          )
-        );
+  const processQueue = useCallback(() => {
+    if (isProcessing || !workerRef.current) return;
 
-        // 画像処理を実行
-        const {
-          resizedBlob,
-          thumbnailBlob,
-          originalWidth,
-          originalHeight,
-          cropped,
-        } = await processImage(imageFile.file, settings);
-
-        // Canvasから画像サイズを取得
-        const img = new Image();
-        const url = URL.createObjectURL(resizedBlob);
-        await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
-          img.src = url;
-        });
-        URL.revokeObjectURL(url);
-
-        // ProcessedImageを作成
-        const processedImage: ProcessedImage = {
-          id: imageFile.id,
-          originalFile: imageFile,
-          resizedBlob,
-          thumbnailBlob,
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-          originalWidth,
-          originalHeight,
-          downloadUrl: createDownloadUrl(resizedBlob),
-          thumbnailUrl: createDownloadUrl(thumbnailBlob),
-          outputFormat: settings.outputFormat,
-          resizeEnabled: settings.resizeEnabled,
-          maxSize: settings.maxSize,
-          quality: settings.quality,
-          cropped,
-          cropAspectRatio: cropped ? settings.crop.aspectRatio : undefined,
-        };
-
-        // ステータスを完了に更新
-        setQueue((prev) =>
-          prev.map((item) =>
-            item.id === imageFile.id
-              ? { ...item, status: ProcessingStatus.COMPLETED, progress: 100 }
-              : item
-          )
-        );
-
-        // トラッキングイベントを送信
-        const durationMs = Math.round(performance.now() - startTime);
-        trackImageConverted({
-          outputFormat: settings.outputFormat,
-          resizeEnabled: settings.resizeEnabled,
-          maxSize: settings.maxSize,
-          quality: settings.quality,
-          originalBytes: imageFile.size,
-          resultBytes: resizedBlob.size,
-          resultWidth: img.naturalWidth,
-          resultHeight: img.naturalHeight,
-          durationMs,
-        });
-
-        return processedImage;
-      } catch (error) {
-        // エラー時のステータス更新
-        setQueue((prev) =>
-          prev.map((item) =>
-            item.id === imageFile.id
-              ? {
-                  ...item,
-                  status: ProcessingStatus.ERROR,
-                  error:
-                    error instanceof Error
-                      ? error.message
-                      : '画像の処理に失敗しました',
-                }
-              : item
-          )
-        );
-
-        // エラートラッキングイベントを送信
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : '画像の処理に失敗しました';
-        trackImageConvertError({
-          message: errorMessage.slice(0, 100),
-          outputFormat: settings.outputFormat,
-          resizeEnabled: settings.resizeEnabled,
-          maxSize: settings.maxSize,
-          quality: settings.quality,
-        });
-
-        return null;
-      }
-    },
-    [settings]
-  );
-
-  /**
-   * キュー内の全ファイルを順次処理
-   */
-  const processQueue = useCallback(async () => {
-    if (isProcessing) return;
+    const waitingFiles = queue.filter((item) => item.status === ProcessingStatus.WAITING);
+    if (waitingFiles.length === 0) return;
 
     setIsProcessing(true);
 
-    const waitingFiles = queue.filter(
-      (item) => item.status === ProcessingStatus.WAITING
-    );
-
-    for (const imageFile of waitingFiles) {
-      const result = await processSingleFile(imageFile);
-      if (result) {
-        setResults((prev) => [...prev, result]);
+    // Workerに送信してステータスを更新
+    const sentFiles: string[] = [];
+    for (const file of waitingFiles) {
+      if (sendToWorker(file)) {
+        sentFiles.push(file.id);
       }
     }
 
-    setIsProcessing(false);
-  }, [queue, isProcessing, processSingleFile]);
+    // ステータスをPROCESSINGに更新
+    if (sentFiles.length > 0) {
+      const sentIds = new Set(sentFiles);
+      setQueue((prev) =>
+        prev.map((item) =>
+          sentIds.has(item.id) ? { ...item, status: ProcessingStatus.PROCESSING } : item
+        )
+      );
+    }
+  }, [queue, isProcessing, sendToWorker]);
 
   /**
    * キューをクリア
    */
   const clearQueue = useCallback(() => {
     setQueue([]);
+    fileInfoRef.current.clear();
   }, []);
 
   /**
@@ -182,6 +301,7 @@ export function useImageProcessor(settings: ResizeSettings) {
    */
   const clearResults = useCallback(() => {
     setResults([]);
+    processedIdsRef.current.clear();
   }, []);
 
   /**
@@ -191,6 +311,10 @@ export function useImageProcessor(settings: ResizeSettings) {
     setQueue([]);
     setResults([]);
     setIsProcessing(false);
+    sentIdsRef.current.clear();
+    processedIdsRef.current.clear();
+    fileInfoRef.current.clear();
+    startTimesRef.current.clear();
   }, []);
 
   /**
