@@ -1,5 +1,10 @@
-import type { ResizeSettings } from '../types';
-import { OutputFormat } from '../types';
+import type { ResizeSettings, CropAspectRatioKey, PresetSizeKey } from '../types';
+import {
+  OutputFormat,
+  SizeMode,
+  PresetSize,
+  CropAspectRatio,
+} from '../types';
 
 interface SettingsPanelProps {
   settings: ResizeSettings;
@@ -27,6 +32,49 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
 
   const handleFormatChange = (format: OutputFormat) => {
     onChange({ ...settings, outputFormat: format });
+  };
+
+  const handleSizeModeChange = (mode: SizeMode) => {
+    onChange({
+      ...settings,
+      sizeMode: mode,
+      // スライダーモードに切り替え時はクロップを無効化
+      crop:
+        mode === SizeMode.SLIDER
+          ? { ...settings.crop, enabled: false }
+          : settings.crop,
+    });
+  };
+
+  const handlePresetSizeChange = (preset: PresetSizeKey) => {
+    onChange({
+      ...settings,
+      maxSize: PresetSize[preset],
+    });
+  };
+
+  const handleCropToggle = () => {
+    onChange({
+      ...settings,
+      crop: { ...settings.crop, enabled: !settings.crop.enabled },
+    });
+  };
+
+  const handleCropAspectRatioChange = (ratio: CropAspectRatioKey) => {
+    onChange({
+      ...settings,
+      crop: { ...settings.crop, aspectRatio: ratio },
+    });
+  };
+
+  // 現在のmaxSizeに対応するプリセットキーを取得
+  const getCurrentPresetKey = (): PresetSizeKey | null => {
+    for (const [key, value] of Object.entries(PresetSize)) {
+      if (value === settings.maxSize) {
+        return key as PresetSizeKey;
+      }
+    }
+    return null;
   };
 
   return (
@@ -64,26 +112,136 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
 
       {/* 最大サイズ設定（リサイズがONのときのみ表示） */}
       {settings.resizeEnabled && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            最大サイズ: {settings.maxSize}px
-          </label>
-          <input
-            type="range"
-            value={settings.maxSize}
-            onChange={(e) => handleMaxSizeChange(e.target.value)}
-            min="10"
-            max="1920"
-            step="10"
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs text-gray-500">
-            <span>10px</span>
-            <span>1920px</span>
+        <div className="space-y-4">
+          {/* サイズ選択モードトグル */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              サイズ設定方式
+            </label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleSizeModeChange(SizeMode.SLIDER)}
+                className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+                  settings.sizeMode === SizeMode.SLIDER
+                    ? 'bg-golden text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                }`}
+              >
+                スライダー
+              </button>
+              <button
+                onClick={() => handleSizeModeChange(SizeMode.PRESET)}
+                className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+                  settings.sizeMode === SizeMode.PRESET
+                    ? 'bg-golden text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                }`}
+              >
+                規格サイズ
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-gray-500">
-            画像の長辺がこのサイズにリサイズされます
-          </p>
+
+          {/* スライダーモード */}
+          {settings.sizeMode === SizeMode.SLIDER && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                最大サイズ: {settings.maxSize}px
+              </label>
+              <input
+                type="range"
+                value={settings.maxSize}
+                onChange={(e) => handleMaxSizeChange(e.target.value)}
+                min="10"
+                max="3840"
+                step="10"
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>10px</span>
+                <span>1920px</span>
+                <span>3840px</span>
+              </div>
+              <p className="text-xs text-gray-500">
+                画像の長辺がこのサイズにリサイズされます
+              </p>
+            </div>
+          )}
+
+          {/* 規格サイズモード */}
+          {settings.sizeMode === SizeMode.PRESET && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  長辺サイズを選択: {settings.maxSize}px
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {(Object.keys(PresetSize) as PresetSizeKey[]).map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => handlePresetSizeChange(key)}
+                      className={`px-4 py-3 rounded-md font-medium transition-colors ${
+                        getCurrentPresetKey() === key
+                          ? 'bg-golden text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                      }`}
+                    >
+                      <div className="text-sm font-bold">{key}</div>
+                      <div className="text-xs opacity-75">
+                        {PresetSize[key]}px
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* クロップ設定 */}
+              <div className="space-y-3 pt-2 border-t border-gray-200">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="crop-enabled"
+                    checked={settings.crop.enabled}
+                    onChange={handleCropToggle}
+                    className="w-4 h-4 text-golden rounded focus:ring-golden"
+                  />
+                  <label
+                    htmlFor="crop-enabled"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    切り取り（クロップ）を有効にする
+                  </label>
+                </div>
+                {settings.crop.enabled && (
+                  <div className="space-y-2">
+                    <label className="block text-xs text-gray-500">
+                      アスペクト比を選択（画像中央から切り取り）
+                    </label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {(
+                        Object.keys(CropAspectRatio) as CropAspectRatioKey[]
+                      ).map((ratio) => (
+                        <button
+                          key={ratio}
+                          onClick={() => handleCropAspectRatioChange(ratio)}
+                          className={`px-2 py-2 rounded-md text-sm font-medium transition-colors ${
+                            settings.crop.aspectRatio === ratio
+                              ? 'bg-golden text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                          }`}
+                        >
+                          {ratio}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      画像の上下または左右の余分な部分が切り取られます
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -140,7 +298,25 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
         <h4 className="text-sm font-medium text-gray-700 mb-2">現在の設定</h4>
         <div className="text-sm text-gray-600 space-y-1">
           <p>リサイズ: {settings.resizeEnabled ? 'ON' : 'OFF'}</p>
-          {settings.resizeEnabled && <p>最大サイズ: {settings.maxSize}px</p>}
+          {settings.resizeEnabled && (
+            <>
+              <p>
+                サイズ設定:{' '}
+                {settings.sizeMode === SizeMode.SLIDER
+                  ? 'スライダー'
+                  : '規格サイズ'}
+              </p>
+              <p>最大サイズ: {settings.maxSize}px</p>
+              {settings.sizeMode === SizeMode.PRESET && (
+                <p>
+                  クロップ:{' '}
+                  {settings.crop.enabled
+                    ? `ON (${settings.crop.aspectRatio})`
+                    : 'OFF'}
+                </p>
+              )}
+            </>
+          )}
           <p>品質: {settings.quality}%</p>
           <p>出力形式: {settings.outputFormat}</p>
         </div>

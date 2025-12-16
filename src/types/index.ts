@@ -10,6 +10,49 @@ export const OutputFormat = {
 export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 
 /**
+ * サイズ選択モード
+ */
+export const SizeMode = {
+  SLIDER: 'SLIDER',
+  PRESET: 'PRESET',
+} as const;
+
+export type SizeMode = (typeof SizeMode)[keyof typeof SizeMode];
+
+/**
+ * プリセットサイズ（長辺のピクセル数）
+ */
+export const PresetSize = {
+  SD: 640,
+  HD: 1280,
+  FHD: 1920,
+  '4K': 3840,
+} as const;
+
+export type PresetSizeKey = keyof typeof PresetSize;
+export type PresetSizeValue = (typeof PresetSize)[PresetSizeKey];
+
+/**
+ * クロップ用アスペクト比
+ */
+export const CropAspectRatio = {
+  '16:9': { width: 16, height: 9 },
+  '4:3': { width: 4, height: 3 },
+  '1:1': { width: 1, height: 1 },
+  '9:16': { width: 9, height: 16 },
+} as const;
+
+export type CropAspectRatioKey = keyof typeof CropAspectRatio;
+
+/**
+ * クロップ設定
+ */
+export interface CropSettings {
+  enabled: boolean;
+  aspectRatio: CropAspectRatioKey;
+}
+
+/**
  * 処理ステータス
  */
 export const ProcessingStatus = {
@@ -54,6 +97,8 @@ export interface ProcessedImage {
   resizeEnabled: boolean;
   maxSize: number;
   quality: number;
+  cropped: boolean;
+  cropAspectRatio?: CropAspectRatioKey;
 }
 
 /**
@@ -64,6 +109,8 @@ export interface ResizeSettings {
   maxSize: number;
   quality: number;
   outputFormat: OutputFormat;
+  sizeMode: SizeMode;
+  crop: CropSettings;
 }
 
 /**
@@ -100,6 +147,11 @@ export const DEFAULT_SETTINGS: ResizeSettings = {
   maxSize: 720,
   quality: 80,
   outputFormat: OutputFormat.JPEG,
+  sizeMode: SizeMode.SLIDER,
+  crop: {
+    enabled: false,
+    aspectRatio: '16:9',
+  },
 };
 
 /**

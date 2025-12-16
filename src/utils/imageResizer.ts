@@ -1,5 +1,11 @@
 import type { ResizeSettings } from '../types';
-import { OutputFormat, MIME_TYPES, THUMBNAIL_SIZE } from '../types';
+import {
+  OutputFormat,
+  MIME_TYPES,
+  THUMBNAIL_SIZE,
+  SizeMode,
+  CropAspectRatio,
+} from '../types';
 import { encode as encodeAvif } from '@jsquash/avif';
 import { optimise as optimisePng } from '@jsquash/oxipng';
 
@@ -96,6 +102,66 @@ export function resizeCanvas(
 }
 
 /**
+ * 中央クロップのサイズと座標を計算
+ */
+export function calculateCropSize(
+  originalWidth: number,
+  originalHeight: number,
+  targetAspect: { width: number; height: number }
+): { sx: number; sy: number; sw: number; sh: number } {
+  const originalAspect = originalWidth / originalHeight;
+  const targetAspectRatio = targetAspect.width / targetAspect.height;
+
+  let sw: number;
+  let sh: number;
+  let sx: number;
+  let sy: number;
+
+  if (originalAspect > targetAspectRatio) {
+    // 元画像の方が横長 → 左右をカット
+    sh = originalHeight;
+    sw = Math.round(originalHeight * targetAspectRatio);
+    sx = Math.round((originalWidth - sw) / 2);
+    sy = 0;
+  } else {
+    // 元画像の方が縦長 → 上下をカット
+    sw = originalWidth;
+    sh = Math.round(originalWidth / targetAspectRatio);
+    sx = 0;
+    sy = Math.round((originalHeight - sh) / 2);
+  }
+
+  return { sx, sy, sw, sh };
+}
+
+/**
+ * Canvasを指定アスペクト比で中央クロップ
+ */
+export function cropCanvas(
+  sourceCanvas: HTMLCanvasElement,
+  aspectRatio: { width: number; height: number }
+): HTMLCanvasElement {
+  const { sx, sy, sw, sh } = calculateCropSize(
+    sourceCanvas.width,
+    sourceCanvas.height,
+    aspectRatio
+  );
+
+  const canvas = document.createElement('canvas');
+  canvas.width = sw;
+  canvas.height = sh;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+
+  ctx.drawImage(sourceCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+  return canvas;
+}
+
+/**
  * 品質パラメータ（50-100%）を@jsquash/pngのlevel（1-6）に変換
  * 50% → level 1 (最速、最小圧縮)
  * 100% → level 6 (最遅、最大圧縮)
@@ -159,25 +225,39 @@ export async function convertCanvasToBlob(
 export async function resizeImage(
   file: File,
   settings: ResizeSettings
-): Promise<{ blob: Blob; originalWidth: number; originalHeight: number }> {
+): Promise<{
+  blob: Blob;
+  originalWidth: number;
+  originalHeight: number;
+  cropped: boolean;
+}> {
   // 画像をCanvasに読み込み
   const { canvas, width, height } = await loadImageToCanvas(file);
   const originalWidth = width;
   const originalHeight = height;
 
-  // リサイズがOFFの場合は元のサイズのまま
   let targetCanvas = canvas;
+  let cropped = false;
+
+  // クロップ処理（規格サイズモード && クロップ有効時のみ）
+  if (settings.sizeMode === SizeMode.PRESET && settings.crop.enabled) {
+    const aspectRatio = CropAspectRatio[settings.crop.aspectRatio];
+    targetCanvas = cropCanvas(targetCanvas, aspectRatio);
+    cropped = true;
+  }
+
+  // リサイズ処理
   if (settings.resizeEnabled) {
     // リサイズサイズを計算
     const { width: newWidth, height: newHeight } = calculateResizeSize(
-      width,
-      height,
+      targetCanvas.width,
+      targetCanvas.height,
       settings.maxSize
     );
 
     // リサイズが必要な場合
-    if (newWidth !== width || newHeight !== height) {
-      targetCanvas = resizeCanvas(canvas, newWidth, newHeight);
+    if (newWidth !== targetCanvas.width || newHeight !== targetCanvas.height) {
+      targetCanvas = resizeCanvas(targetCanvas, newWidth, newHeight);
     }
   }
 
@@ -188,7 +268,7 @@ export async function resizeImage(
     settings.quality
   );
 
-  return { blob, originalWidth, originalHeight };
+  return { blob, originalWidth, originalHeight, cropped };
 }
 
 /**
@@ -230,6 +310,7 @@ export async function processImage(
   thumbnailBlob: Blob;
   originalWidth: number;
   originalHeight: number;
+  cropped: boolean;
 }> {
   const [resizedResult, thumbnailBlob] = await Promise.all([
     resizeImage(file, settings),
@@ -241,5 +322,6 @@ export async function processImage(
     thumbnailBlob,
     originalWidth: resizedResult.originalWidth,
     originalHeight: resizedResult.originalHeight,
+    cropped: resizedResult.cropped,
   };
 }

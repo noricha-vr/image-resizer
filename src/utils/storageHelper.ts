@@ -1,5 +1,10 @@
-import type { ResizeSettings } from '../types';
-import { DEFAULT_SETTINGS, OutputFormat } from '../types';
+import type { ResizeSettings, CropAspectRatioKey } from '../types';
+import {
+  DEFAULT_SETTINGS,
+  OutputFormat,
+  SizeMode,
+  CropAspectRatio,
+} from '../types';
 
 const STORAGE_KEY = 'imageResizerSettings';
 
@@ -33,7 +38,9 @@ export function loadSettings(): ResizeSettings {
           ? parsed.resizeEnabled
           : DEFAULT_SETTINGS.resizeEnabled,
       maxSize:
-        typeof parsed.maxSize === 'number' && parsed.maxSize > 0
+        typeof parsed.maxSize === 'number' &&
+        parsed.maxSize >= 10 &&
+        parsed.maxSize <= 3840
           ? parsed.maxSize
           : DEFAULT_SETTINGS.maxSize,
       quality:
@@ -46,6 +53,21 @@ export function loadSettings(): ResizeSettings {
         Object.values(OutputFormat).includes(parsed.outputFormat)
           ? parsed.outputFormat
           : DEFAULT_SETTINGS.outputFormat,
+      sizeMode:
+        Object.values(SizeMode).includes(parsed.sizeMode)
+          ? parsed.sizeMode
+          : DEFAULT_SETTINGS.sizeMode,
+      crop: {
+        enabled:
+          typeof parsed.crop?.enabled === 'boolean'
+            ? parsed.crop.enabled
+            : DEFAULT_SETTINGS.crop.enabled,
+        aspectRatio:
+          parsed.crop?.aspectRatio &&
+          Object.keys(CropAspectRatio).includes(parsed.crop.aspectRatio)
+            ? (parsed.crop.aspectRatio as CropAspectRatioKey)
+            : DEFAULT_SETTINGS.crop.aspectRatio,
+      },
     };
 
     return settings;

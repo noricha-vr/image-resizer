@@ -55,6 +55,7 @@ export function useImageProcessor(settings: ResizeSettings) {
           thumbnailBlob,
           originalWidth,
           originalHeight,
+          cropped,
         } = await processImage(imageFile.file, settings);
 
         // Canvasから画像サイズを取得
@@ -83,6 +84,8 @@ export function useImageProcessor(settings: ResizeSettings) {
           resizeEnabled: settings.resizeEnabled,
           maxSize: settings.maxSize,
           quality: settings.quality,
+          cropped,
+          cropAspectRatio: cropped ? settings.crop.aspectRatio : undefined,
         };
 
         // ステータスを完了に更新
