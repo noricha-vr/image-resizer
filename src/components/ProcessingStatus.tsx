@@ -1,6 +1,6 @@
 import type { ImageFile, ProcessedImage } from '../types';
-import { ProcessingStatus as Status } from '../types';
-import { downloadProcessedImage, downloadAll } from '../utils/downloadHelper';
+import { ProcessingStatus as Status, FILE_EXTENSIONS } from '../types';
+import { downloadProcessedImage, downloadAll, removeFileExtension } from '../utils/downloadHelper';
 import { formatBytes } from '../utils/size';
 
 interface ProcessingStatusProps {
@@ -192,9 +192,9 @@ export function ProcessingStatus({
                       </span>
                     </div>
 
-                    {/* ファイル名 */}
+                    {/* ファイル名（変換後の拡張子で表示） */}
                     <p className="text-sm sm:text-base font-medium text-gray-900 truncate mb-1">
-                      {result.originalFile.name}
+                      {removeFileExtension(result.originalFile.name)}{FILE_EXTENSIONS[result.outputFormat]}
                     </p>
 
                     {/* 元画像の縦横px → 変換後の縦横px */}
