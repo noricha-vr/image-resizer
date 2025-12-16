@@ -121,20 +121,20 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
             <div className="flex gap-2">
               <button
                 onClick={() => handleSizeModeChange(SizeMode.SLIDER)}
-                className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
                   settings.sizeMode === SizeMode.SLIDER
-                    ? 'bg-golden text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                    ? 'bg-golden text-white ring-2 ring-golden-dark'
+                    : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
                 }`}
               >
                 スライダー
               </button>
               <button
                 onClick={() => handleSizeModeChange(SizeMode.PRESET)}
-                className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors ${
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
                   settings.sizeMode === SizeMode.PRESET
-                    ? 'bg-golden text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                    ? 'bg-golden text-white ring-2 ring-golden-dark'
+                    : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
                 }`}
               >
                 規格サイズ
@@ -180,10 +180,10 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
                     <button
                       key={key}
                       onClick={() => handlePresetSizeChange(key)}
-                      className={`px-4 py-3 rounded-md font-medium transition-colors ${
+                      className={`px-4 py-3 rounded-lg font-medium transition-all ${
                         getCurrentPresetKey() === key
-                          ? 'bg-golden text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                          ? 'bg-golden text-white ring-2 ring-golden-dark'
+                          : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
                       }`}
                     >
                       <div className="text-sm font-bold">{key}</div>
@@ -224,10 +224,10 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
                         <button
                           key={ratio}
                           onClick={() => handleCropAspectRatioChange(ratio)}
-                          className={`px-2 py-2 rounded-md text-sm font-medium transition-colors ${
+                          className={`px-2 py-2 rounded-lg text-sm font-medium transition-all ${
                             settings.crop.aspectRatio === ratio
-                              ? 'bg-golden text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                              ? 'bg-golden text-white ring-2 ring-golden-dark'
+                              : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
                           }`}
                         >
                           {ratio}
@@ -255,10 +255,10 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
             <button
               key={format}
               onClick={() => handleFormatChange(format)}
-              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 settings.outputFormat === format
-                  ? 'bg-golden text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-orange-light hover:text-white'
+                  ? 'bg-golden text-white ring-2 ring-golden-dark'
+                  : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
               }`}
             >
               {format}
@@ -293,34 +293,6 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
         </p>
       </div>
 
-      {/* 設定プレビュー */}
-      <div className="pt-4 border-t border-gray-200">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">現在の設定</h4>
-        <div className="text-sm text-gray-600 space-y-1">
-          <p>リサイズ: {settings.resizeEnabled ? 'ON' : 'OFF'}</p>
-          {settings.resizeEnabled && (
-            <>
-              <p>
-                サイズ設定:{' '}
-                {settings.sizeMode === SizeMode.SLIDER
-                  ? 'スライダー'
-                  : '規格サイズ'}
-              </p>
-              <p>最大サイズ: {settings.maxSize}px</p>
-              {settings.sizeMode === SizeMode.PRESET && (
-                <p>
-                  クロップ:{' '}
-                  {settings.crop.enabled
-                    ? `ON (${settings.crop.aspectRatio})`
-                    : 'OFF'}
-                </p>
-              )}
-            </>
-          )}
-          <p>品質: {settings.quality}%</p>
-          <p>出力形式: {settings.outputFormat}</p>
-        </div>
-      </div>
     </div>
   );
 }
