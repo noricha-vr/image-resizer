@@ -34,6 +34,53 @@ export type PresetSizeKey = keyof typeof PresetSize;
 export type PresetSizeValue = (typeof PresetSize)[PresetSizeKey];
 
 /**
+ * 拡張プリセットサイズ（SEO・バナー・アイコン用）
+ */
+export const ExtendedPresetSizes = {
+  SNS: {
+    label: 'SNS・OGP',
+    sizes: {
+      'OGP': 1200,
+      'Instagram': 1080,
+      'Twitter': 600,
+    },
+  },
+  Banner: {
+    label: 'バナー',
+    sizes: {
+      'Leaderboard': 728,
+      'Rectangle': 336,
+      'Square': 300,
+      'Wide': 468,
+    },
+  },
+  ChromeExt: {
+    label: 'Chrome拡張ストア',
+    sizes: {
+      'Large': 1280,
+      'Marquee': 920,
+      'Small': 440,
+      'Icon': 128,
+      '48px': 48,
+      '16px': 16,
+    },
+  },
+  Icon: {
+    label: 'アイコン',
+    sizes: {
+      '512': 512,
+      '256': 256,
+      '192': 192,
+      '128': 128,
+      '64': 64,
+      '32': 32,
+    },
+  },
+} as const;
+
+export type ExtendedPresetCategory = keyof typeof ExtendedPresetSizes;
+
+/**
  * クロップ用アスペクト比
  */
 export const CropAspectRatio = {

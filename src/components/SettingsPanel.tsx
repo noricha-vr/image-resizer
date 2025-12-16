@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { ResizeSettings, CropAspectRatioKey, PresetSizeKey } from '../types';
 import {
   OutputFormat,
   SizeMode,
   PresetSize,
   CropAspectRatio,
+  ExtendedPresetSizes,
 } from '../types';
 
 interface SettingsPanelProps {
@@ -12,6 +14,7 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
+  const [showExtended, setShowExtended] = useState(false);
   const handleResizeToggle = () => {
     onChange({ ...settings, resizeEnabled: !settings.resizeEnabled });
   };
@@ -50,6 +53,13 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
     onChange({
       ...settings,
       maxSize: PresetSize[preset],
+    });
+  };
+
+  const handleExtendedSizeChange = (size: number) => {
+    onChange({
+      ...settings,
+      maxSize: size,
     });
   };
 
@@ -193,6 +203,51 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
                     </button>
                   ))}
                 </div>
+
+                {/* 更に表示ボタン */}
+                <button
+                  onClick={() => setShowExtended(!showExtended)}
+                  className="w-full py-2 text-sm text-gray-500 hover:text-golden transition-colors flex items-center justify-center gap-1"
+                >
+                  {showExtended ? '閉じる' : 'SEO・バナー・アイコン用サイズ'}
+                  <svg
+                    className={`w-4 h-4 transition-transform ${showExtended ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* 拡張サイズ一覧 */}
+                {showExtended && (
+                  <div className="space-y-4 pt-2 border-t border-gray-100">
+                    {Object.entries(ExtendedPresetSizes).map(([category, { label, sizes }]) => (
+                      <div key={category} className="space-y-2">
+                        <label className="block text-xs font-medium text-gray-500">
+                          {label}
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {Object.entries(sizes).map(([name, size]) => (
+                            <button
+                              key={name}
+                              onClick={() => handleExtendedSizeChange(size)}
+                              className={`px-2 py-2 rounded-lg text-sm font-medium transition-all ${
+                                settings.maxSize === size
+                                  ? 'bg-golden text-white ring-2 ring-golden-dark'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-golden hover:text-white'
+                              }`}
+                            >
+                              <div className="font-medium">{name}</div>
+                              <div className="text-xs opacity-75">{size}px</div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* クロップ設定 */}
