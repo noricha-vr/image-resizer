@@ -16,4 +16,7 @@ export default defineConfig({
     },
   },
   site: 'https://resize.kojin.works',
+  server: {
+    host: true,
+  },
 });
