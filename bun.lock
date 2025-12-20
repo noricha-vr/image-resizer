@@ -5,8 +5,8 @@
       "name": "image-resizer",
       "dependencies": {
         "@astrojs/react": "^4.4.1",
-        "@jsquash/avif": "^2.1.1",
-        "@jsquash/oxipng": "^2.3.0",
+        "@jsquash/avif": "2.1.1",
+        "@jsquash/oxipng": "2.3.0",
         "astro": "^5.16.5",
         "react": "^19.1.1",
         "react-dom": "^19.1.1",

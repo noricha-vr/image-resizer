@@ -1,0 +1,14 @@
+# Cloudflare Pages custom headers
+
+# WASMファイルのContent-Type明示（CDNでのMIMEタイプ誤認防止）
+/*.wasm
+  Content-Type: application/wasm
+  Cache-Control: public, max-age=31536000, immutable
+
+/_astro/*.wasm
+  Content-Type: application/wasm
+  Cache-Control: public, max-age=31536000, immutable
+
+# 静的アセットのキャッシュ設定
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

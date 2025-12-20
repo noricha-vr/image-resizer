@@ -1,3 +1,7 @@
-# Cloudflare Pages SPA routing support
-# すべての未定義ルートをindex.htmlにリダイレクト
+# Cloudflare Pages routing rules
+# 静的アセットはリダイレクト対象外（WASMファイル等のCDN問題対策）
+/*.wasm    200!
+/_astro/*  200!
+
+# SPA routing - 上記以外のルートをindex.htmlにリダイレクト
 /*    /index.html   200
